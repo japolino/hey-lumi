@@ -70,3 +70,8 @@ bun test src
 bun run build        # typecheck + dist/backend.js + dist/frontend.js
 ```
 Design and reports: `spec/` (DESIGN.md, SPEC.md, v0-report.md, kws-wasm.md).
+
+## License
+
+MIT, see [LICENSE](LICENSE). The wake word files it downloads are separate; their sources and licenses are in
+[hey-lumi-assets/NOTICE.md](https://github.com/japolino/hey-lumi-assets/blob/main/NOTICE.md).
