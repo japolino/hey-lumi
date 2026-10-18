@@ -1,6 +1,6 @@
 # Lumi Voice v0: build report
 
-Date: 2026-10-18. Repo: `C:/Users/eme4/lumi-voice` (branch `main`-line commits on the current branch; worker branches
+Date: 2026-10-18. Repo: `C:/Users/eme4/lumi-voice`, branch `master` (worker branches
 `wt/audio`, `wt/dictation`, `wt/router` are merged). Host for live tests: Lumiverse `origin/staging` @ `2a8d9461`
 (scratch worktree `C:/Users/eme4/lv-wt-lumivoice-qa`, port 7893, data in `scratch/qa-data`), Chrome with a fake mic
 (`--use-file-for-fake-audio-capture`, SAPI voices), real Jev (TypeSafe decision connection, model `jev-preview`) and a
