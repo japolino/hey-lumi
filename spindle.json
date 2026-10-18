@@ -16,7 +16,8 @@
     "presets",
     "images",
     "chat_mutation",
-    "app_manipulation"
+    "app_manipulation",
+    "embeddings"
   ],
   "entry_backend": "dist/backend.js",
   "entry_frontend": "dist/frontend.js",
