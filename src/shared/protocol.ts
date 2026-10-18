@@ -36,8 +36,8 @@ export interface ActionCandidate {
 
 /** Hey Lumi!'s own actions. The frontend offers only those it can run right now. */
 export const LUMI_ACTIONS = {
-  "lumi:character_open": { label: "Open character", description: "Open a character's profile page", arg: "character" },
-  "lumi:character_chat_latest": { label: "Chat with character", description: "Open the most recent chat with a character", arg: "character" },
+  "lumi:character_open": { label: "Character profile", description: "Show a character's profile page (description, creator notes), only when the user asks for the profile", arg: "character" },
+  "lumi:character_chat_latest": { label: "Open character", description: "Open a character: go to the most recent chat with them", arg: "character" },
   "lumi:character_chat_new": { label: "New chat with character", description: "Start a new chat with a character", arg: "character" },
   "lumi:chat_open": { label: "Open chat", description: "Open one of the recent chats", arg: "chat" },
   "lumi:persona_switch": { label: "Switch persona", description: "Make a persona the active persona", arg: "persona" },
