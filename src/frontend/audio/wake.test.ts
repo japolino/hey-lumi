@@ -3,7 +3,8 @@ import { existsSync, readFileSync } from "node:fs";
 import type { AudioSource, SpeechBurst, Transcriber } from "./types";
 import { createTextWakeDetector, matchWake } from "./wake";
 
-const WHISTLE = "C:/Users/eme4/lumi-voice/scratch/audio/wh_all.json";
+/** Local eval data (scratch/ is not in git); these tests skip without it. */
+const WHISTLE = new URL("../../../scratch/audio/wh_all.json", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
 
 /** Ground truth of the clips in scratch/audio (spec/audio-feasibility.md section 4). */
 function label(path: string): "pos" | "neg" | "noisy_pos" | "noisy_neg" {
@@ -16,7 +17,7 @@ function label(path: string): "pos" | "neg" | "noisy_pos" | "noisy_neg" {
 }
 
 describe.skipIf(!existsSync(WHISTLE))("matchWake on real Whistle output", () => {
-  const rows = JSON.parse(readFileSync(WHISTLE, "utf8")) as Array<{ name: string; plain: { text?: string } }>;
+  const rows = (existsSync(WHISTLE) ? JSON.parse(readFileSync(WHISTLE, "utf8")) : []) as Array<{ name: string; plain: { text?: string } }>;
   const counts = { pos: 0, neg: 0, noisy_pos: 0, noisy_neg: 0 };
   const hits = { pos: 0, neg: 0, noisy_pos: 0, noisy_neg: 0 };
   for (const row of rows) {

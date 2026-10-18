@@ -3,7 +3,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { createBurstCutter, type BurstCutterOptions } from "./speech-activity";
 import { encodeWav } from "./wav";
 
-const CLIPS = "C:/Users/eme4/lumi-voice/scratch/audio/clips/";
+/** Local eval clips (scratch/ is not in git); these tests skip without them. */
+const CLIPS = new URL("../../../scratch/audio/clips/", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
 const FRAME = 800;
 
 /** Reads 16-bit PCM WAV (any channel count; the first channel is used). */
