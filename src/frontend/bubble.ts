@@ -13,7 +13,7 @@ export interface BubbleHandlers {
 }
 
 const CSS = `
-.lumi-voice{position:fixed;right:16px;bottom:96px;z-index:9995;font:13px/1.4 var(--lumiverse-font-family,system-ui,sans-serif);color:var(--lumiverse-text,#eee)}
+.lumi-voice{position:fixed;right:16px;bottom:96px;z-index:100000;font:13px/1.4 var(--lumiverse-font-family,system-ui,sans-serif);color:var(--lumiverse-text,#eee)}
 .lumi-voice *{box-sizing:border-box}
 .lumi-voice-pill{display:flex;align-items:center;gap:6px;margin-left:auto;padding:6px 10px;border-radius:999px;border:1px solid var(--lumiverse-border-light,#ffffff22);background:var(--lumiverse-bg-elevated,#222);color:inherit;cursor:pointer;font:inherit;box-shadow:0 2px 10px #0004}
 .lumi-voice-dot{width:9px;height:9px;border-radius:50%;background:var(--lumiverse-text-dim,#888)}

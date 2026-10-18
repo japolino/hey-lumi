@@ -118,7 +118,8 @@ const stepFor = (candidate: ActionCandidate, argId: string): PlanStep => ({
 function askArg(candidate: ActionCandidate, plan: DecisionPlan, answers: Record<string, DecisionAnswer>, entities: Partial<Record<ArgKind, Ranked[]>>): RouteResult {
   const kind = candidate.arg!;
   const answer = choice(answers[`arg_${kind}`]);
-  if (!answer) return { kind: "none", say: `I couldn't find any ${kind.replace("_", " ")} to pick from.` };
+  // No list to pick from (e.g. themes on hosts without apply_theme): let the frontend run it and say what is missing.
+  if (!answer) return { kind: "run", steps: [{ actionId: candidate.id, args: {} }], say: candidate.label, confirm: !!candidate.destructive, confidence: 0.5 };
   const likely = ranked(answer, UNCLEAR)
     .filter(([, p], i) => i === 0 || p >= THRESHOLDS.askOption)
     .map(([key]) => plan.args[kind]!.get(key)!);
