@@ -62,7 +62,10 @@ browser). Until it is ready, and in browsers without WebAssembly, Lumi recognise
 | `images` | Show character portraits to Jev ("the red-haired one") |
 | `app_manipulation` | Apply a theme by voice (Lumiverse #476) and run commands that other extensions register |
 
-Once Lumiverse #472 is merged, Hey Lumi! will also ask for `embeddings`. It is not requested yet because current Lumiverse rejects unknown permissions.
+Once Lumiverse #472 is merged, Hey Lumi! will also ask for `embeddings`. `main` does not request it yet, because current
+Lumiverse refuses to enable an extension that asks for a permission it does not know. On a Lumiverse build that has #472
+(for example the `hey-lumi-all` branch of japolino/Lumiverse), install or switch Hey Lumi! to its `hey-lumi-all` branch:
+the same code, plus `embeddings` in `spindle.json`.
 
 ## ⚙️ Settings (the "Hey Lumi!" side panel)
 

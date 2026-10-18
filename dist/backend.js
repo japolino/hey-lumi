@@ -1156,7 +1156,7 @@ function generationText(result) {
 }
 function createServices(host, settings, userId) {
   const user = userId ? { userId } : {};
-  const embeddings = host.embeddings && hasCap(host.host, CAP.embeddings) ? host.embeddings : null;
+  const embeddings = host.embeddings && hasCap(host.host, CAP.embeddings) && host.permissions.has("embeddings") ? host.embeddings : null;
   return {
     async decide(input, options) {
       const result = await host.decisions.evaluate({ ...input, ...user, ...settings.decisionProfile ? { connection_id: settings.decisionProfile } : {} }, options);
@@ -1233,7 +1233,7 @@ function createHandlers(host, entities, services = (s, u) => createServices(host
     async listProfiles(_params, userId) {
       const user = userId ? { userId } : undefined;
       const decision = host.permissions.has("decisions") ? (await host.decisions.listConnections(user)).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_default, model: c.model })) : [];
-      const embedding = host.embeddings ? (await host.embeddings.listConnections(user)).filter((c) => c.enabled).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_primary })) : null;
+      const embedding = host.embeddings && host.permissions.has("embeddings") ? (await host.embeddings.listConnections(user)).filter((c) => c.enabled).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_primary })) : null;
       return { decision, embedding };
     },
     async listNames(_params, userId) {

@@ -40,7 +40,7 @@ export function createHandlers(host: BackendHost, entities: EntityLists, service
       const decision = host.permissions.has("decisions")
         ? (await host.decisions.listConnections(user)).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_default, model: c.model }))
         : [];
-      const embedding = host.embeddings
+      const embedding = host.embeddings && host.permissions.has("embeddings")
         ? (await host.embeddings.listConnections(user)).filter((c) => c.enabled).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_primary }))
         : null;
       return { decision, embedding };

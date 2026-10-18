@@ -28,6 +28,18 @@ test("profile lists: decision connections, and no embedding list without the emb
   expect(await handlers.listProfiles({})).toEqual({ decision: [{ id: "d1", name: "Jev", isDefault: true }], embedding: null });
 });
 
+test("profile lists: embedding connections only when the embeddings permission is granted", async () => {
+  const fake = createFakeHost();
+  const listConnections = async () => [{ id: "e1", name: "Local", provider: "x", model: "m", enabled: true, is_primary: true }];
+  Object.assign(fake.host, { embeddings: { listConnections } });
+  const handlers = createHandlers(fake.host, createEntityLists(fake.host), () => {
+    throw new Error("services not used here");
+  });
+  expect((await handlers.listProfiles({})).embedding).toBeNull();
+  fake.granted.add("embeddings");
+  expect((await handlers.listProfiles({})).embedding).toEqual([{ id: "e1", name: "Local", isDefault: true }]);
+});
+
 test("entity lists page through characters, cache, and skip kinds without permission", async () => {
   const fake = createFakeHost({ granted: ["characters"] });
   fake.state.characters = Array.from({ length: 450 }, (_, i) => ({ id: `c${i}`, name: `Char ${i}`, tags: [], image_id: null }));

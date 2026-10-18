@@ -20,7 +20,7 @@ export function generationText(result: unknown): string {
 /** Services for one request, using the profiles the frontend picked ("" = host default). */
 export function createServices(host: BackendHost, settings: RouterSettings, userId?: string): Services {
   const user = userId ? { userId } : {};
-  const embeddings = host.embeddings && hasCap(host.host, CAP.embeddings) ? host.embeddings : null;
+  const embeddings = host.embeddings && hasCap(host.host, CAP.embeddings) && host.permissions.has("embeddings") ? host.embeddings : null;
   return {
     async decide(input, options) {
       const result = await host.decisions.evaluate(
