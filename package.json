@@ -1,0 +1,19 @@
+{
+  "name": "lumi-voice",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test src",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "build": "bun run typecheck && bun run build:backend && bun run build:frontend",
+    "build:backend": "bun build ./src/backend.ts --outdir ./dist --target browser --format esm",
+    "build:frontend": "bun build ./src/frontend.ts --outdir ./dist --target browser --format esm --minify-whitespace --minify-syntax"
+  },
+  "devDependencies": {
+    "bun-types": "1.3.14",
+    "happy-dom": "20.14.5",
+    "lumiverse-spindle-types": "0.6.52",
+    "typescript": "7.0.2"
+  }
+}
