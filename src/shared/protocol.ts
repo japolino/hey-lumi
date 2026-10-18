@@ -188,6 +188,13 @@ export interface RewriteRequest {
   draft: string;
   chatId: string | null;
   settings: RouterSettings;
+  /**
+   * "polish": same events, better prose (the "rewrite the draft" command).
+   * "dictation": fresh dictation; fix misheard words from the chat and expand it into a full message.
+   */
+  mode: "polish" | "dictation";
+  /** Text already in the chat input before `draft` (dictation mode): context only, not rewritten. */
+  before?: string;
 }
 
 export interface RewriteResult {

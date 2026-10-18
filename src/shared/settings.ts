@@ -16,6 +16,8 @@ export interface HeyLumiSettings {
   };
   /** Speak short replies ("Opening Theme") with TTS when the host has it. */
   voiceReplies: boolean;
+  /** Rewrite each dictation with the LLM in the context of the chat; it may add to what was said. */
+  rewriteDictation: boolean;
   format: DictationFormat;
 }
 
@@ -27,6 +29,7 @@ export const DEFAULT_SETTINGS: HeyLumiSettings = {
   idleTimeoutSec: 20,
   profiles: { stt: "", decision: "", llm: "", embedding: "", tts: "" },
   voiceReplies: false,
+  rewriteDictation: false,
   format: { thought: "asterisks", quotes: "straight", ooc: "double_parens" },
 };
 
@@ -44,6 +47,7 @@ export function normalizeSettings(raw: unknown): HeyLumiSettings {
       typeof r.idleTimeoutSec === "number" && Number.isFinite(r.idleTimeoutSec) ? Math.min(120, Math.max(5, r.idleTimeoutSec)) : d.idleTimeoutSec,
     profiles: { stt: str(p.stt), decision: str(p.decision), llm: str(p.llm), embedding: str(p.embedding), tts: str(p.tts) },
     voiceReplies: typeof r.voiceReplies === "boolean" ? r.voiceReplies : d.voiceReplies,
+    rewriteDictation: typeof r.rewriteDictation === "boolean" ? r.rewriteDictation : d.rewriteDictation,
     format: {
       thought: pick(f.thought, ["asterisks", "plain"], d.format.thought),
       quotes: pick(f.quotes, ["straight", "curly"], d.format.quotes),

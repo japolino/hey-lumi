@@ -509,18 +509,28 @@ async function formatDictation(req, services) {
     punctuation
   };
 }
-var REWRITE_SYSTEM = "You edit roleplay messages. Rewrite the player's draft as a better roleplay message: clearer, more vivid, well paced, " + "with the same events, meaning and intent. Keep the same person and tense, and the same marks: dialogue in quotes, " + "inner thoughts in *asterisks*, out-of-character notes in ((double parentheses)) or [brackets] as in the draft. " + "Do not add events or speak for other characters. Use the recent messages only as context. Output only the rewritten message.";
-async function rewriteDraft(draft, recent, services) {
+var MARKS = "Keep the same marks: dialogue in quotes, inner thoughts in *asterisks*, out-of-character notes in ((double parentheses)) " + "or [brackets] as in the draft.";
+var REWRITE_SYSTEM = {
+  polish: "You edit roleplay messages. Rewrite the player's draft as a better roleplay message: clearer, more vivid, well paced, " + `with the same events, meaning and intent. Keep the same person and tense. ${MARKS} ` + "Do not add events or speak for other characters. Use the recent messages only as context. Output only the rewritten message.",
+  dictation: "You write roleplay messages from the player's voice dictation. Speech recognition may have misheard words: fix them " + "using the recent messages (names, places, things already in the story). Then turn the dictation into a full roleplay " + "message that fits the conversation: you may expand it with actions, description, feelings and dialogue for the " + "player's character, following what the player said and meant. Match the person and tense of the player's earlier " + `messages. ${MARKS} Do not decide what other characters do or say. Output only the message.`
+};
+async function rewriteDraft(draft, recent, services, options = {}) {
+  const mode = options.mode ?? "polish";
   const context = recent.filter((m) => m.role !== "system").map((m) => `${m.role === "user" ? "Player" : "Partner"}: ${m.content}`).join(`
 
 `);
+  const before = options.before?.trim() ? `Already written in this message (keep, do not repeat):
+${options.before.trim()}
+
+` : "";
+  const label = mode === "dictation" ? "Dictation" : "Draft to rewrite";
   const user = `${context ? `Recent messages:
 ${context}
 
-` : ""}Draft to rewrite:
+` : ""}${before}${label}:
 ${draft}`;
   const out = await services.complete([
-    { role: "system", content: REWRITE_SYSTEM },
+    { role: "system", content: REWRITE_SYSTEM[mode] },
     { role: "user", content: user }
   ]);
   return out.trim();
@@ -1226,7 +1236,7 @@ function createHandlers(host, entities, services = (s, u) => createServices(host
         const messages = await host.chat.getMessages(req.chatId);
         recent = messages.slice(-REWRITE_CONTEXT_MESSAGES).map((m) => ({ role: m.role, content: m.content }));
       }
-      return { text: await rewriteDraft(req.draft, recent, services(req.settings, userId)) };
+      return { text: await rewriteDraft(req.draft, recent, services(req.settings, userId), { mode: req.mode, before: req.before }) };
     },
     async listProfiles(_params, userId) {
       const user = userId ? { userId } : undefined;

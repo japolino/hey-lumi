@@ -2,7 +2,7 @@
  * Dictation: code splits the transcript, one Jev request labels units and paragraph breaks, code formats
  * (spec/dictation-bench.md approach J). The user's words never change: code only adds marks and breaks.
  */
-import type { DictateRequest, DictateResult, DictationLabel } from "../../shared/protocol";
+import type { DictateRequest, DictateResult, DictationLabel, RewriteRequest } from "../../shared/protocol";
 import type { ChatMessage, Services } from "../services/types";
 import { paragraphStarts, render, speakerStarts } from "./format";
 import { jevGaps, jevLabels } from "./jev";
@@ -120,21 +120,40 @@ export async function formatDictation(req: DictateRequest, services: Services): 
   };
 }
 
-const REWRITE_SYSTEM =
-  "You edit roleplay messages. Rewrite the player's draft as a better roleplay message: clearer, more vivid, well paced, " +
-  "with the same events, meaning and intent. Keep the same person and tense, and the same marks: dialogue in quotes, " +
-  "inner thoughts in *asterisks*, out-of-character notes in ((double parentheses)) or [brackets] as in the draft. " +
-  "Do not add events or speak for other characters. Use the recent messages only as context. Output only the rewritten message.";
+const MARKS =
+  "Keep the same marks: dialogue in quotes, inner thoughts in *asterisks*, out-of-character notes in ((double parentheses)) " +
+  "or [brackets] as in the draft.";
+
+const REWRITE_SYSTEM: Record<RewriteRequest["mode"], string> = {
+  polish:
+    "You edit roleplay messages. Rewrite the player's draft as a better roleplay message: clearer, more vivid, well paced, " +
+    `with the same events, meaning and intent. Keep the same person and tense. ${MARKS} ` +
+    "Do not add events or speak for other characters. Use the recent messages only as context. Output only the rewritten message.",
+  dictation:
+    "You write roleplay messages from the player's voice dictation. Speech recognition may have misheard words: fix them " +
+    "using the recent messages (names, places, things already in the story). Then turn the dictation into a full roleplay " +
+    "message that fits the conversation: you may expand it with actions, description, feelings and dialogue for the " +
+    "player's character, following what the player said and meant. Match the person and tense of the player's earlier " +
+    `messages. ${MARKS} Do not decide what other characters do or say. Output only the message.`,
+};
 
 /** LLM rewrite of the draft with the last few chat messages as context. */
-export async function rewriteDraft(draft: string, recent: ChatMessage[], services: Services): Promise<string> {
+export async function rewriteDraft(
+  draft: string,
+  recent: ChatMessage[],
+  services: Services,
+  options: { mode?: RewriteRequest["mode"]; before?: string } = {},
+): Promise<string> {
+  const mode = options.mode ?? "polish";
   const context = recent
     .filter((m) => m.role !== "system")
     .map((m) => `${m.role === "user" ? "Player" : "Partner"}: ${m.content}`)
     .join("\n\n");
-  const user = `${context ? `Recent messages:\n${context}\n\n` : ""}Draft to rewrite:\n${draft}`;
+  const before = options.before?.trim() ? `Already written in this message (keep, do not repeat):\n${options.before.trim()}\n\n` : "";
+  const label = mode === "dictation" ? "Dictation" : "Draft to rewrite";
+  const user = `${context ? `Recent messages:\n${context}\n\n` : ""}${before}${label}:\n${draft}`;
   const out = await services.complete([
-    { role: "system", content: REWRITE_SYSTEM },
+    { role: "system", content: REWRITE_SYSTEM[mode] },
     { role: "user", content: user },
   ]);
   return out.trim();

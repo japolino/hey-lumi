@@ -308,14 +308,34 @@ export function createSession(deps: SessionDeps) {
     }
     const settings = deps.settings();
     const formatted = await deps.rpc("dictate", { text, format: settings.format, settings: routerSettings(settings) });
+    let addition = formatted.text;
+    let note = "Added to your message.";
+    if (settings.rewriteDictation) {
+      set({ said: "Rewriting..." });
+      try {
+        const res = await deps.rpc("rewrite", {
+          draft: addition,
+          before: deps.draft.get(),
+          chatId: deps.ctx.getActiveChat().chatId,
+          settings: routerSettings(settings),
+          mode: "dictation",
+        });
+        if (res.text.trim()) {
+          addition = res.text.trim();
+          note = 'Added, rewritten. Say "undo" to take it out.';
+        } else note = "The rewrite came back empty; I added what you said.";
+      } catch (error) {
+        note = `The rewrite failed (${message(error)}); I added what you said.`;
+      }
+    }
     const current = deps.draft.get();
-    const next = appendDictation(current, formatted.text, lastInsert !== null && current === lastInsert);
+    const next = appendDictation(current, addition, lastInsert !== null && current === lastInsert);
     undoStack.push(current);
     deps.draft.set(next);
     lastInsert = next;
-    remember(saidText, "dictated into the draft");
+    remember(saidText, settings.rewriteDictation ? "dictated and rewrote it into the draft" : "dictated into the draft");
     set({ phase: "listening" });
-    await say("Added to your message.");
+    await say(note);
   }
 
   function setDraft(text: string) {
@@ -345,7 +365,7 @@ export function createSession(deps: SessionDeps) {
       const draft = deps.draft.available() ? deps.draft.get() : "";
       if (!draft.trim()) return { ok: false, say: "There is nothing to rewrite." };
       set({ said: "Rewriting..." });
-      const res = await deps.rpc("rewrite", { draft, chatId: deps.ctx.getActiveChat().chatId, settings: routerSettings(deps.settings()) });
+      const res = await deps.rpc("rewrite", { draft, chatId: deps.ctx.getActiveChat().chatId, settings: routerSettings(deps.settings()), mode: "polish" });
       if (!res.text.trim()) return { ok: false, say: "The rewrite came back empty; I kept your text." };
       setDraft(res.text);
       return { ok: true, say: 'Rewritten. Say "undo" to get your version back.' };
