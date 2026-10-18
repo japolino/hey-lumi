@@ -787,7 +787,6 @@ var IMAGE_LIMIT = 8;
 var EXAMPLE_NAMES = 8;
 var IMAGE_MIN = 280;
 var IMAGE_MAX = 1568;
-var CLEAR_NAME = 0.85;
 var LOOKS = /\b(hair|haired|eyes|eyed|wearing|wears|dress|glasses|blonde?|brunette|redhead|outfit|tattoo|skin|ears|horns?|tail|uniform|beard|bearded|mask|masked|hat|hood|hooded|helmet|scar|freckles|looks|looking|(one|girl|guy|woman|man|boy) (with|in|who|wearing))\b/i;
 var ARG_NOUN = {
   character: "character",
@@ -847,16 +846,13 @@ function actionCriterion(c, entities) {
     ...c.arg ? { needs: `a ${ARG_NOUN[c.arg]}${examples.length ? `, one of: ${examples.join(", ")}` : ""}` } : {}
   };
 }
-function wantsPortraits(utterance, ranked) {
-  if (LOOKS.test(utterance))
-    return true;
-  const strength = Math.max(0, ...ranked.map((r) => nameStrength(utterance, r.item.name)));
-  return strength >= 0.5 && strength < CLEAR_NAME;
+function wantsPortraits(utterance) {
+  return LOOKS.test(utterance);
 }
 async function portraitRefs(ranked, services) {
   const refs = new Map;
   const withImage = ranked.filter((r) => r.item.imageId).slice(0, IMAGE_LIMIT);
-  const sizes = await Promise.all(withImage.map((r) => services.imageSize(r.item.imageId).catch(() => null)));
+  const sizes = await Promise.all(withImage.map((r) => services.portraitSize(r.item.imageId).catch(() => null)));
   withImage.forEach((r, i) => {
     const s = sizes[i];
     if (s && [s.width, s.height].every((px) => px >= IMAGE_MIN && px <= IMAGE_MAX))
@@ -906,7 +902,7 @@ async function buildDecision(req, candidates, entities, services) {
     if (!ranked.length)
       continue;
     let portraits = new Map;
-    if (kind === "character" && services.decisionImages && wantsPortraits(req.utterance, ranked)) {
+    if (kind === "character" && services.decisionImages && wantsPortraits(req.utterance)) {
       portraits = await portraitRefs(ranked, services);
       if (portraits.size)
         ranked = ranked.slice(0, IMAGE_LIMIT);
@@ -1192,9 +1188,11 @@ function createServices(host, settings, userId) {
       }
       return { vectors, cacheKey };
     } : null,
-    async imageSize(imageId) {
+    async portraitSize(imageId) {
       const image = await host.images.get(imageId, userId);
-      return image?.width && image.height ? { width: image.width, height: image.height } : null;
+      if (image?.mime_type !== "image/png" && image?.mime_type !== "image/jpeg")
+        return null;
+      return image.width && image.height ? { width: image.width, height: image.height } : null;
     },
     log(level, message) {
       host.log[level](`[hey_lumi] ${message}`);

@@ -20,7 +20,7 @@ export interface FakeOptions {
   plan?: string;
   embed?: Services["embed"];
   decisionImages?: boolean;
-  imageSize?: { width: number; height: number } | null;
+  portraitSize?: { width: number; height: number } | null;
 }
 
 export function fakeServices(options: FakeOptions = {}) {
@@ -44,8 +44,8 @@ export function fakeServices(options: FakeOptions = {}) {
       return options.plan ?? "[]";
     },
     embed: options.embed ?? null,
-    async imageSize() {
-      return options.imageSize === undefined ? { width: 512, height: 512 } : options.imageSize;
+    async portraitSize() {
+      return options.portraitSize === undefined ? { width: 512, height: 512 } : options.portraitSize;
     },
     log() {},
   };

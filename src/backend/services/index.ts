@@ -59,9 +59,10 @@ export function createServices(host: BackendHost, settings: RouterSettings, user
           return { vectors, cacheKey };
         }
       : null,
-    async imageSize(imageId) {
+    async portraitSize(imageId) {
       const image = await host.images.get(imageId, userId);
-      return image?.width && image.height ? { width: image.width, height: image.height } : null;
+      if (image?.mime_type !== "image/png" && image?.mime_type !== "image/jpeg") return null;
+      return image.width && image.height ? { width: image.width, height: image.height } : null;
     },
     log(level, message) {
       host.log[level](`[hey_lumi] ${message}`);

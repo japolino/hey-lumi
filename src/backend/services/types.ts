@@ -24,7 +24,10 @@ export interface Services {
    * `cacheKey` identifies connection + model: vectors with different keys are not comparable.
    */
   readonly embed: ((texts: string[], inputType: "query" | "passage") => Promise<{ vectors: number[][]; cacheKey: string }>) | null;
-  /** Pixel size of a stored image, or null when unknown (Jev rejects image sides under 280 px or over 1568 px). */
-  imageSize(imageId: string): Promise<{ width: number; height: number } | null>;
+  /**
+   * Pixel size of a stored PNG or JPEG image, or null for other formats or when unknown.
+   * Jev takes only PNG and JPEG, with sides from 280 to 1568 px.
+   */
+  portraitSize(imageId: string): Promise<{ width: number; height: number } | null>;
   log(level: "info" | "warn" | "error", message: string): void;
 }
