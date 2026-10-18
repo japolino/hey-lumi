@@ -62,8 +62,9 @@ describe("character portraits", () => {
 
   test("stay text when images are off, the size is out of range, or the name was said clearly", async () => {
     expect((await build("open the one with red hair", { decisionImages: false })).input.assets).toBeUndefined();
-    expect((await build("open the one with red hair", { decisionImages: true, imageSize: { width: 200, height: 512 } })).input.assets).toBeUndefined();
-    expect((await build("open the one with red hair", { decisionImages: true, imageSize: null })).input.assets).toBeUndefined();
+    expect((await build("open the one with red hair", { decisionImages: true, portraitSize: { width: 200, height: 512 } })).input.assets).toBeUndefined();
+    expect((await build("open the one with red hair", { decisionImages: true, portraitSize: null })).input.assets).toBeUndefined();
     expect((await build("open hero", { decisionImages: true })).input.assets).toBeUndefined();
+    expect((await build("can you open my heroics", { decisionImages: true })).input.assets).toBeUndefined();
   });
 });

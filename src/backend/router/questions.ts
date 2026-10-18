@@ -1,7 +1,6 @@
 import type { DecisionDescription, DecisionImageAsset, DecisionQuestion, DecisionState } from "lumiverse-spindle-types";
 import type { ActionCandidate, ArgKind, EntityOption, PendingAsk, RouteRequest } from "../../shared/protocol";
 import type { Services } from "../services/types";
-import { nameStrength } from "./fuzzy";
 
 export const NO_ACTION = "none";
 export const UNCLEAR = "unclear";
@@ -11,8 +10,6 @@ export const IMAGE_LIMIT = 8;
 const EXAMPLE_NAMES = 8;
 const IMAGE_MIN = 280;
 const IMAGE_MAX = 1568;
-/** Below this, a spoken name is a partial match ("Seo something") and portraits help. */
-const CLEAR_NAME = 0.85;
 
 const LOOKS =
   /\b(hair|haired|eyes|eyed|wearing|wears|dress|glasses|blonde?|brunette|redhead|outfit|tattoo|skin|ears|horns?|tail|uniform|beard|bearded|mask|masked|hat|hood|hooded|helmet|scar|freckles|looks|looking|(one|girl|guy|woman|man|boy) (with|in|who|wearing))\b/i;
@@ -93,17 +90,18 @@ function actionCriterion(c: ActionCandidate, entities: Partial<Record<ArgKind, R
   };
 }
 
-/** True when the utterance describes a character's looks or only half-says a name, so portraits should go to Jev. */
-export function wantsPortraits(utterance: string, ranked: Ranked[]): boolean {
-  if (LOOKS.test(utterance)) return true;
-  const strength = Math.max(0, ...ranked.map((r) => nameStrength(utterance, r.item.name)));
-  return strength >= 0.5 && strength < CLEAR_NAME;
+/**
+ * True when the utterance describes a character's looks, so portraits should go to Jev.
+ * A half-heard name is not enough: with many characters almost any word partly matches some name.
+ */
+export function wantsPortraits(utterance: string): boolean {
+  return LOOKS.test(utterance);
 }
 
 async function portraitRefs(ranked: Ranked[], services: Services): Promise<Map<string, string>> {
   const refs = new Map<string, string>();
   const withImage = ranked.filter((r) => r.item.imageId).slice(0, IMAGE_LIMIT);
-  const sizes = await Promise.all(withImage.map((r) => services.imageSize(r.item.imageId!).catch(() => null)));
+  const sizes = await Promise.all(withImage.map((r) => services.portraitSize(r.item.imageId!).catch(() => null)));
   withImage.forEach((r, i) => {
     const s = sizes[i];
     if (s && [s.width, s.height].every((px) => px >= IMAGE_MIN && px <= IMAGE_MAX)) refs.set(r.item.id, `lumi-portrait-${i + 1}-${r.item.imageId}`);
@@ -165,7 +163,7 @@ export async function buildDecision(
     let ranked = entities[kind] ?? [];
     if (!ranked.length) continue;
     let portraits = new Map<string, string>();
-    if (kind === "character" && services.decisionImages && wantsPortraits(req.utterance, ranked)) {
+    if (kind === "character" && services.decisionImages && wantsPortraits(req.utterance)) {
       portraits = await portraitRefs(ranked, services);
       if (portraits.size) ranked = ranked.slice(0, IMAGE_LIMIT);
     }

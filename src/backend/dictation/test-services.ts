@@ -41,7 +41,7 @@ export function scriptedServices(script: Script = {}) {
       return r;
     },
     embed: null,
-    async imageSize() {
+    async portraitSize() {
       return null;
     },
     log() {},
