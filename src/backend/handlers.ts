@@ -10,6 +10,8 @@ type Handlers = { [M in BackendMethod]: (params: Parameters<BackendMethods[M]>[0
 
 const BACKEND_KINDS = ["character", "persona", "preset"] as const;
 const REWRITE_CONTEXT_MESSAGES = 8;
+/** Whistle takes at most 500 keywords; leave room for "Lumi". */
+const MAX_NAMES = 400;
 
 export function createHandlers(host: BackendHost, entities: EntityLists, services: (settings: RouteRequest["settings"], userId?: string) => Services = (s, u) => createServices(host, s, u)): Handlers {
   return {
@@ -42,6 +44,10 @@ export function createHandlers(host: BackendHost, entities: EntityLists, service
         ? (await host.embeddings.listConnections(user)).filter((c) => c.enabled).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_primary }))
         : null;
       return { decision, embedding };
+    },
+    async listNames(_params, userId) {
+      const [characters, personas] = await Promise.all([entities.get("character", userId), entities.get("persona", userId)]);
+      return [...new Set([...(personas ?? []), ...(characters ?? [])].map((e) => e.name.trim()).filter(Boolean))].slice(0, MAX_NAMES);
     },
     async swipe({ chatId, direction }) {
       const messages = await host.chat.getMessages(chatId);

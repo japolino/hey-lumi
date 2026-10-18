@@ -11,7 +11,7 @@ import { createRpc } from "./frontend/rpc";
 import { createSession } from "./frontend/session";
 import { renderSettingsPanel } from "./frontend/settings-panel";
 
-const LISTENING_KEY = "listening";
+const LISTENING_KEY = "voice:listening";
 const MIC_ICON =
   '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
 
@@ -46,7 +46,8 @@ export function setup(rawCtx: unknown) {
   };
 
   const capture = createMicCapture();
-  const transcriber = createTranscriber(ctx, () => settings.profiles.stt);
+  let names: string[] = [];
+  const transcriber = createTranscriber(ctx, () => settings.profiles.stt, () => names);
   const textWake = createTextWakeDetector(transcriber);
   const wake = (): WakeDetector | null => (settings.wakeWord ? textWake : null);
   const tts = ctx.tts && hasCap(ctx.host, CAP.tts) ? ctx.tts : null;
@@ -91,6 +92,7 @@ export function setup(rawCtx: unknown) {
     if (capture.running) return;
     setPill({ mic: "starting", title: "Lumi Voice: starting the microphone..." });
     try {
+      rpc.call("listNames", {}).then((list) => void (names = list), () => {});
       await capture.start();
       stopGates = watchPauseGates(ctx, capture);
       await session.startWake();
@@ -121,11 +123,8 @@ export function setup(rawCtx: unknown) {
 
   const bubble = createBubble({
     onPill: () => {
-      if (!capture.running) {
-        void startListening().then(() => capture.running && session.open());
-        return;
-      }
-      session.open();
+      if (capture.running) session.open();
+      else void startListening();
     },
     onClose: () => session.close(),
     onType: (text) => void session.utterance(text),

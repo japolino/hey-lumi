@@ -219,6 +219,8 @@ export interface BackendMethods {
   listProfiles: (params: Record<string, never>) => BackendProfiles;
   /** Swipe via spindle.chat.updateMessage when the host has no swipe command. "right" past the last swipe fails. */
   swipe: (params: SwipeRequest) => { ok: boolean; say?: string };
+  /** Character and persona names, used as STT keywords so Whistle spells them right. */
+  listNames: (params: Record<string, never>) => string[];
   /** spindle.personas.switchActive when the host has no switch_persona action. */
   switchPersona: (params: { personaId: string }) => { ok: true };
 }

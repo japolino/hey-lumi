@@ -10,6 +10,5 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/frontend/audio/kws/**"]
+  "include": ["src/**/*.ts"]
 }

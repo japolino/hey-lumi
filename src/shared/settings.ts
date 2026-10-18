@@ -19,7 +19,8 @@ export interface LumiVoiceSettings {
   format: DictationFormat;
 }
 
-export const SETTINGS_KEY = "settings";
+/** ctx.settings keys must be "<module>:<key>". */
+export const SETTINGS_KEY = "voice:settings";
 
 export const DEFAULT_SETTINGS: LumiVoiceSettings = {
   wakeWord: true,
