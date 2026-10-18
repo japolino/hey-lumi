@@ -6,39 +6,40 @@ import { pickDomControl, routeUtterance } from "./router/index";
 import { createServices } from "./services/index";
 import type { ChatMessage, Services } from "./services/types";
 
-type Handlers = { [M in BackendMethod]: (params: Parameters<BackendMethods[M]>[0]) => Promise<ReturnType<BackendMethods[M]>> };
+type Handlers = { [M in BackendMethod]: (params: Parameters<BackendMethods[M]>[0], userId?: string) => Promise<ReturnType<BackendMethods[M]>> };
 
 const BACKEND_KINDS = ["character", "persona", "preset"] as const;
 const REWRITE_CONTEXT_MESSAGES = 8;
 
-export function createHandlers(host: BackendHost, entities: EntityLists, services: (settings: RouteRequest["settings"]) => Services = (s) => createServices(host, s)): Handlers {
+export function createHandlers(host: BackendHost, entities: EntityLists, services: (settings: RouteRequest["settings"], userId?: string) => Services = (s, u) => createServices(host, s, u)): Handlers {
   return {
-    async route(req) {
+    async route(req, userId) {
       const needed = new Set(req.candidates.map((c) => c.arg).filter((a): a is ArgKind => !!a));
       const filled = { ...req.entities };
       for (const kind of BACKEND_KINDS) {
         if (!needed.has(kind)) continue;
-        const items = await entities.get(kind);
+        const items = await entities.get(kind, userId);
         if (items) filled[kind] = items;
       }
-      return routeUtterance({ ...req, entities: filled }, services(req.settings));
+      return routeUtterance({ ...req, entities: filled }, services(req.settings, userId));
     },
-    domPick: (req) => pickDomControl(req, services(req.settings)),
-    dictate: (req) => formatDictation(req, services(req.settings)),
-    async rewrite(req) {
+    domPick: (req, userId) => pickDomControl(req, services(req.settings, userId)),
+    dictate: (req, userId) => formatDictation(req, services(req.settings, userId)),
+    async rewrite(req, userId) {
       let recent: ChatMessage[] = [];
       if (req.chatId) {
         const messages = await host.chat.getMessages(req.chatId);
         recent = messages.slice(-REWRITE_CONTEXT_MESSAGES).map((m) => ({ role: m.role, content: m.content }));
       }
-      return { text: await rewriteDraft(req.draft, recent, services(req.settings)) };
+      return { text: await rewriteDraft(req.draft, recent, services(req.settings, userId)) };
     },
-    async listProfiles() {
+    async listProfiles(_params, userId) {
+      const user = userId ? { userId } : undefined;
       const decision = host.permissions.has("decisions")
-        ? (await host.decisions.listConnections()).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_default }))
+        ? (await host.decisions.listConnections(user)).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_default }))
         : [];
       const embedding = host.embeddings
-        ? (await host.embeddings.listConnections()).filter((c) => c.enabled).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_primary }))
+        ? (await host.embeddings.listConnections(user)).filter((c) => c.enabled).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_primary }))
         : null;
       return { decision, embedding };
     },
@@ -52,8 +53,8 @@ export function createHandlers(host: BackendHost, entities: EntityLists, service
       await host.chat.updateMessage(chatId, last.id, { swipe_id: next });
       return { ok: true };
     },
-    async switchPersona({ personaId }) {
-      await host.personas.switchActive(personaId);
+    async switchPersona({ personaId }, userId) {
+      await host.personas.switchActive(personaId, userId);
       return { ok: true };
     },
   };
@@ -71,11 +72,11 @@ export function errorResponse(id: string, error: unknown): RpcResponse {
   return { type: "lumi_voice:res", id, ok: false, error: { code, message } };
 }
 
-export async function handleRpc(handlers: Handlers, req: RpcRequest): Promise<RpcResponse> {
-  const handler = handlers[req.method] as ((params: unknown) => Promise<unknown>) | undefined;
+export async function handleRpc(handlers: Handlers, req: RpcRequest, userId?: string): Promise<RpcResponse> {
+  const handler = handlers[req.method] as ((params: unknown, userId?: string) => Promise<unknown>) | undefined;
   if (!handler) return errorResponse(req.id, new Error(`UNKNOWN_METHOD: ${req.method}`));
   try {
-    return { type: "lumi_voice:res", id: req.id, ok: true, result: (await handler(req.params)) as never };
+    return { type: "lumi_voice:res", id: req.id, ok: true, result: (await handler(req.params, userId)) as never };
   } catch (error) {
     return errorResponse(req.id, error);
   }

@@ -18,12 +18,13 @@ export function generationText(result: unknown): string {
 }
 
 /** Services for one request, using the profiles the frontend picked ("" = host default). */
-export function createServices(host: BackendHost, settings: RouterSettings): Services {
+export function createServices(host: BackendHost, settings: RouterSettings, userId?: string): Services {
+  const user = userId ? { userId } : {};
   const embeddings = host.embeddings && hasCap(host.host, CAP.embeddings) ? host.embeddings : null;
   return {
     async decide(input, options) {
       const result = await host.decisions.evaluate(
-        { ...input, ...(settings.decisionProfile ? { connection_id: settings.decisionProfile } : {}) },
+        { ...input, ...user, ...(settings.decisionProfile ? { connection_id: settings.decisionProfile } : {}) },
         options,
       );
       return result.answers;
@@ -38,6 +39,7 @@ export function createServices(host: BackendHost, settings: RouterSettings): Ser
         messages,
         parameters,
         reasoning: { source: "off" },
+        ...user,
         ...(settings.llmProfile ? { connection_id: settings.llmProfile } : {}),
         ...(options.signal ? { signal: options.signal } : {}),
       } as Parameters<BackendHost["generate"]["quiet"]>[0]);
@@ -49,7 +51,7 @@ export function createServices(host: BackendHost, settings: RouterSettings): Ser
           let cacheKey = "";
           let connectionId = settings.embeddingProfile || undefined;
           for (let i = 0; i < texts.length; i += 256) {
-            const res = await embeddings.embed({ texts: texts.slice(i, i + 256), input_type: inputType, ...(connectionId ? { connection_id: connectionId } : {}) });
+            const res = await embeddings.embed({ texts: texts.slice(i, i + 256), input_type: inputType, ...user, ...(connectionId ? { connection_id: connectionId } : {}) });
             connectionId = res.connection_id;
             cacheKey = `${res.connection_id}:${res.model}`;
             vectors.push(...res.embeddings);
@@ -58,7 +60,7 @@ export function createServices(host: BackendHost, settings: RouterSettings): Ser
         }
       : null,
     async imageSize(imageId) {
-      const image = await host.images.get(imageId);
+      const image = await host.images.get(imageId, userId);
       return image?.width && image.height ? { width: image.width, height: image.height } : null;
     },
     log(level, message) {

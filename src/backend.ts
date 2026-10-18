@@ -12,7 +12,7 @@ const handlers = createHandlers(spindle, entities);
 
 spindle.onFrontendMessage(async (payload, userId, frontendSessionId) => {
   if (!isRpcRequest(payload)) return;
-  const response = await handleRpc(handlers, payload);
+  const response = await handleRpc(handlers, payload, userId);
   if (!response.ok) spindle.log.warn(`[lumi_voice] ${payload.method} failed: ${response.error.message}`);
   spindle.sendToFrontend(response, userId, frontendSessionId ? { frontendSessionId } : undefined);
 });

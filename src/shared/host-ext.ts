@@ -128,10 +128,10 @@ export type FrontendCtx = Omit<SpindleFrontendContext, "connections" | "stt" | "
 
 export interface EmbeddingsAPI {
   embed(
-    input: { texts: string[]; input_type?: "query" | "passage"; connection_id?: string },
+    input: { texts: string[]; input_type?: "query" | "passage"; connection_id?: string; userId?: string },
     options?: { signal?: AbortSignal },
   ): Promise<{ embeddings: number[][]; connection_id: string; model: string; dimensions: number }>;
-  listConnections(): Promise<Array<{ id: string; name: string; provider: string; model: string; enabled: boolean; is_primary: boolean }>>;
+  listConnections(options?: { userId?: string }): Promise<Array<{ id: string; name: string; provider: string; model: string; enabled: boolean; is_primary: boolean }>>;
 }
 
 export type BackendHost = SpindleAPI & { embeddings?: EmbeddingsAPI };
