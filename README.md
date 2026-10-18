@@ -60,6 +60,9 @@ browser). Until it is ready, and in browsers without WebAssembly, Lumi recognise
 | `chats`, `chat_mutation` | Delete or swipe messages, open chats |
 | `characters`, `personas`, `presets` | Find them by name |
 | `images` | Show character portraits to Jev ("the red-haired one") |
+| `app_manipulation` | Apply a theme by voice (Lumiverse #476) and run commands that other extensions register |
+
+Once Lumiverse #472 is merged, Hey Lumi! will also ask for `embeddings`. It is not requested yet because current Lumiverse rejects unknown permissions.
 
 ## ⚙️ Settings (the "Hey Lumi!" side panel)
 
