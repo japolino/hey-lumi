@@ -77,6 +77,11 @@ export async function runStep(step: PlanStep, env: ActionEnv): Promise<StepOutco
   const surfaceRef = parseSurfaceActionId(step.actionId);
   if (surfaceRef) {
     const surface = findSurface(env.surfaces(), surfaceRef.kind, surfaceRef.id);
+    if (!surface && surfaceRef.kind === "settings_tab") {
+      // Hosts before Lumiverse #475 list no settings tabs; the backend can still open them.
+      await env.rpc("openSettings", { id: surfaceRef.id });
+      return { ok: true };
+    }
     if (!surface) return { ok: false, say: "That is not available right now." };
     const problem = scopeProblem(env, surface);
     if (problem) return { ok: false, say: problem };

@@ -23,6 +23,7 @@ export function createFakeHost(options: { capabilities?: Record<string, number>;
     activePersona: null as string | null,
     characterPages: 0,
     logs: [] as string[],
+    opened: [] as string[],
   };
   const host = {
     host: { descriptorVersion: 1, lumiverseVersion: "test", capabilities: { "decisions-v1": 1, ...options.capabilities }, extensionInstallationId: "test" },
@@ -39,6 +40,10 @@ export function createFakeHost(options: { capabilities?: Record<string, number>;
       switchActive: async (id: string | null) => void (state.activePersona = id),
     },
     presets: { list: async () => ({ data: state.presets, total: state.presets.length }) },
+    ui: {
+      getSettingsTabs: async () => [{ id: "voice", shortName: "Voice", tabName: "Voice & Speech", tabDescription: "TTS and STT", keywords: ["tts"] }],
+      openSettings: async (id: string) => void state.opened.push(id),
+    },
     decisions: { listConnections: async () => [{ id: "d1", name: "Jev", is_default: true }] },
     chat: {
       getMessages: async (chatId: string) => (state.messages.get(chatId) ?? []).map((m) => ({ ...m, role: m.is_user ? "user" : "assistant" })),

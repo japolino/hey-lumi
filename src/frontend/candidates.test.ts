@@ -48,3 +48,10 @@ test("theme options come from the apply_theme params schema", () => {
   expect(themeOptions([apply])).toEqual([{ id: "emerald", name: "Emerald" }]);
   expect(themeOptions(surfaces)).toEqual([]);
 });
+
+test("settings tabs from the backend fill in when the catalog has none", () => {
+  const noSettings = surfaces.filter((s) => s.kind !== "settings_tab" && !s.id.startsWith("settings-"));
+  const fallback: HostSurfaceInfo[] = [{ kind: "settings_tab", id: "voice", label: "Voice & Speech" }];
+  expect(buildCandidates(noSettings, fallback).some((c) => c.id === "surface:settings_tab:voice")).toBe(true);
+  expect(buildCandidates(surfaces, fallback).filter((c) => c.id === "surface:settings_tab:voice").length).toBe(1);
+});

@@ -24,12 +24,22 @@ export function setup(rawCtx: unknown) {
   cleanups.push(() => rpc.dispose());
 
   let surfaces: HostSurfaceInfo[] = ctx.host.surfaces?.list() ?? [];
+  let fallbackSettings: HostSurfaceInfo[] = [];
   let candidates = buildCandidates(surfaces);
   const offSurfaces = ctx.host.surfaces?.subscribe((next) => {
     surfaces = next;
-    candidates = buildCandidates(next);
+    candidates = buildCandidates(next, fallbackSettings);
     entities.invalidate();
   });
+  if (!surfaces.some((s) => s.kind === "settings_tab")) {
+    rpc.call("settingsTabs", {}).then(
+      (tabs) => {
+        fallbackSettings = tabs.map((t) => ({ kind: "settings_tab", ...t }));
+        candidates = buildCandidates(surfaces, fallbackSettings);
+      },
+      () => {},
+    );
+  }
   if (offSurfaces) cleanups.push(offSurfaces);
   const entities = createFrontendEntities(ctx, () => surfaces);
 

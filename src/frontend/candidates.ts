@@ -28,8 +28,12 @@ export function parseSurfaceActionId(actionId: string): { kind: string; id: stri
   return m ? { kind: m[1]!, id: m[2]! } : null;
 }
 
-/** Router candidates: invocable host surfaces without params (minus duplicates) plus Lumi's own actions. */
-export function buildCandidates(surfaces: HostSurfaceInfo[]): ActionCandidate[] {
+/**
+ * Router candidates: invocable host surfaces without params (minus duplicates) plus Lumi's own actions.
+ * `fallbackSettings` (from the backend's spindle.ui.getSettingsTabs) fills in settings tabs when the catalog has none.
+ */
+export function buildCandidates(surfaces: HostSurfaceInfo[], fallbackSettings: HostSurfaceInfo[] = []): ActionCandidate[] {
+  if (!surfaces.some((s) => s.kind === "settings_tab")) surfaces = [...surfaces, ...fallbackSettings];
   const drawerIds = new Set(surfaces.filter((s) => s.kind === "drawer_tab").map((s) => s.id));
   const settingsIds = new Set(surfaces.filter((s) => s.kind === "settings_tab").map((s) => s.id));
   const out: ActionCandidate[] = [];

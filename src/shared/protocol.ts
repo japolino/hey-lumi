@@ -221,6 +221,10 @@ export interface BackendMethods {
   swipe: (params: SwipeRequest) => { ok: boolean; say?: string };
   /** Character and persona names, used as STT keywords so Whistle spells them right. */
   listNames: (params: Record<string, never>) => string[];
+  /** Settings tabs from spindle.ui.getSettingsTabs, for hosts whose surface catalog lists none (staging before #475). */
+  settingsTabs: (params: Record<string, never>) => Array<{ id: string; label: string; description: string; keywords: string[] }>;
+  /** spindle.ui.openSettings(id). */
+  openSettings: (params: { id: string }) => { ok: true };
   /** spindle.personas.switchActive when the host has no switch_persona action. */
   switchPersona: (params: { personaId: string }) => { ok: true };
 }

@@ -49,6 +49,14 @@ export function createHandlers(host: BackendHost, entities: EntityLists, service
       const [characters, personas] = await Promise.all([entities.get("character", userId), entities.get("persona", userId)]);
       return [...new Set([...(personas ?? []), ...(characters ?? [])].map((e) => e.name.trim()).filter(Boolean))].slice(0, MAX_NAMES);
     },
+    async settingsTabs(_params, userId) {
+      const tabs = await host.ui.getSettingsTabs(userId ? { userId } : undefined);
+      return tabs.map((t) => ({ id: t.id, label: t.tabName, description: t.tabDescription, keywords: t.keywords }));
+    },
+    async openSettings({ id }, userId) {
+      await host.ui.openSettings(id, userId ? { userId } : undefined);
+      return { ok: true };
+    },
     async swipe({ chatId, direction }) {
       const messages = await host.chat.getMessages(chatId);
       const last = messages.findLast((m) => !m.is_user);
