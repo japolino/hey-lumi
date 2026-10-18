@@ -6,9 +6,10 @@ import type { AudioSource, SpeechBurst, WakeDetector } from "./audio/types";
 import type { Draft } from "./draft";
 import { createSession, type SessionView } from "./session";
 
-function harness(routes: RouteResult[], opts: { idleSec?: number } = {}) {
+function harness(routes: RouteResult[], opts: { idleSec?: number; rewriteDictation?: boolean } = {}) {
   const invoked: Array<{ kind: string; id: string; params?: Record<string, string> }> = [];
   const routeCalls: RouteRequest[] = [];
+  const rewriteCalls: any[] = [];
   const views: SessionView[] = [];
   let draftText = "";
   let wakeStarts = 0;
@@ -44,6 +45,10 @@ function harness(routes: RouteResult[], opts: { idleSec?: number } = {}) {
       return routes.shift() ?? { kind: "ignore" };
     }
     if (method === "dictate") return { text: `<${params.text}>`, units: [], punctuation: "stt" };
+    if (method === "rewrite") {
+      rewriteCalls.push(params);
+      return { text: `[${params.draft}]` };
+    }
     throw new Error(`unexpected ${method}`);
   }) as never;
   const session = createSession({
@@ -54,7 +59,7 @@ function harness(routes: RouteResult[], opts: { idleSec?: number } = {}) {
     transcriber: { transcribe: async (b) => ({ text: (b as unknown as { text: string }).text }) },
     wake: () => wake,
     matchWake: (t) => (/^hey lumi\b[\s,.!]*/i.test(t) ? { rest: t.replace(/^hey lumi\b[\s,.!]*/i, "") } : null),
-    settings: () => ({ ...DEFAULT_SETTINGS, idleTimeoutSec: opts.idleSec ?? 20 }),
+    settings: () => ({ ...DEFAULT_SETTINGS, idleTimeoutSec: opts.idleSec ?? 20, rewriteDictation: opts.rewriteDictation ?? false }),
     surfaces: () => surfaces,
     candidates: () => [],
     entities: async () => ({ lists: {}, recentCharacterIds: [] }),
@@ -73,6 +78,7 @@ function harness(routes: RouteResult[], opts: { idleSec?: number } = {}) {
     session,
     invoked,
     routeCalls,
+    rewriteCalls,
     last: () => views.at(-1)!,
     wakeHit: async (rest: string) => {
       onWake?.({ rest });
@@ -163,4 +169,17 @@ test("after a frame-based wake, the burst that held the wake word is stripped, n
   expect(h.routeCalls.length).toBe(0);
   await h.say("Hey Lumi, open my themes", true);
   expect(h.routeCalls[0]!.utterance).toBe("open my themes");
+});
+
+
+test("with rewriteDictation on, each dictation is rewritten with the draft so far as context", async () => {
+  const h = harness([{ kind: "dictation", text: "she smiles" }, { kind: "dictation", text: "and waves" }], { rewriteDictation: true });
+  h.session.open();
+  await h.say("she smiles");
+  await h.say("and waves");
+  expect(h.draft()).toBe("[<she smiles>] [<and waves>]");
+  expect(h.rewriteCalls.map((c) => [c.mode, c.draft, c.before, c.chatId])).toEqual([
+    ["dictation", "<she smiles>", "", "chat1"],
+    ["dictation", "<and waves>", "[<she smiles>]", "chat1"],
+  ]);
 });

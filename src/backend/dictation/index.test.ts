@@ -84,3 +84,12 @@ test("rewriteDraft sends the draft with recent messages as context and returns t
   expect(user).toContain("She hands you the map.");
   expect(user).toContain('I nod. "Thanks."');
 });
+
+test("rewriteDraft in dictation mode uses the dictation prompt and the text already written", async () => {
+  const { services, calls } = scriptedServices({ replies: ["I lean on the railing."] });
+  await rewriteDraft("lean on the rayling", [{ role: "assistant", content: "The ship's railing is wet." }], services, { mode: "dictation", before: "I sigh." });
+  const [system, user] = calls.complete[0]!;
+  expect(system!.content).toContain("may expand");
+  expect(user!.content).toContain("Already written in this message (keep, do not repeat):\nI sigh.");
+  expect(user!.content).toContain("Dictation:\nlean on the rayling");
+});

@@ -101,6 +101,7 @@ export function renderSettingsPanel(deps: PanelDeps): () => Promise<void> {
       profileSelect("tts", tts, "Choosing a TTS profile needs a newer Lumiverse."),
       check("Speak short replies", s.voiceReplies, (v) => update((n) => void (n.voiceReplies = v)), !deps.ctx.tts),
       el("b", { textContent: "Dictation format" }),
+      check("Rewrite with the chat (LLM, may add to it)", s.rewriteDictation, (v) => update((n) => void (n.rewriteDictation = v))),
       row("Thoughts", select([["asterisks", "*In italics*"], ["plain", "Plain"]], s.format.thought, (v) => update((n) => void (n.format.thought = v as HeyLumiSettings["format"]["thought"])))),
       row("Dialogue quotes", select([["straight", '"Straight"'], ["curly", "“Curly”"]], s.format.quotes, (v) => update((n) => void (n.format.quotes = v as HeyLumiSettings["format"]["quotes"])))),
       row("Out of character", select([["double_parens", "((OOC))"], ["brackets", "[OOC]"]], s.format.ooc, (v) => update((n) => void (n.format.ooc = v as HeyLumiSettings["format"]["ooc"])))),

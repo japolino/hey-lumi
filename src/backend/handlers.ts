@@ -33,7 +33,7 @@ export function createHandlers(host: BackendHost, entities: EntityLists, service
         const messages = await host.chat.getMessages(req.chatId);
         recent = messages.slice(-REWRITE_CONTEXT_MESSAGES).map((m) => ({ role: m.role, content: m.content }));
       }
-      return { text: await rewriteDraft(req.draft, recent, services(req.settings, userId)) };
+      return { text: await rewriteDraft(req.draft, recent, services(req.settings, userId), { mode: req.mode, before: req.before }) };
     },
     async listProfiles(_params, userId) {
       const user = userId ? { userId } : undefined;
