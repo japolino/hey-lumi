@@ -25,6 +25,12 @@ function concat(parts: Float32Array[]): Float32Array {
   return out;
 }
 
+/** Keyword bias for Whistle: "Lumi" first, then the caller's names; host limits are 500 keywords of 100 chars, one line each. */
+export function keywordList(extra: string[]): string[] {
+  const words = ["Lumi", ...extra].map((k) => k.replace(/\s+/g, " ").trim()).filter((k) => k && k.length <= 100);
+  return [...new Set(words)].slice(0, 500);
+}
+
 const audioUnsupported = (error: unknown) => String((error as Error)?.message ?? error).startsWith("STT_AUDIO_UNSUPPORTED");
 
 /**
@@ -33,7 +39,7 @@ const audioUnsupported = (error: unknown) => String((error as Error)?.message ??
  */
 type DefaultMode = "pcm" | "wav" | "whistle";
 
-export function createTranscriber(ctx: FrontendCtx, getProfile: () => string): Transcriber {
+export function createTranscriber(ctx: FrontendCtx, getProfile: () => string, getKeywords: () => string[] = () => []): Transcriber {
   let defaultMode: DefaultMode = "pcm";
   let busy = false;
   let queued: { parts: Float32Array[]; resolve: (r: TranscriptResult | null) => void; reject: (e: unknown) => void } | null = null;
@@ -42,7 +48,7 @@ export function createTranscriber(ctx: FrontendCtx, getProfile: () => string): T
     const stt = ctx.stt;
     if (!stt) throw new Error("Speech-to-text is not available: Lumi Voice needs the 'media' permission and a Lumiverse with ctx.stt.");
     const base: SttTranscribeOptionsExt = { language: "en" };
-    if (hasCap(ctx.host, CAP.sttOptions)) Object.assign(base, { keywords: ["Lumi"], words: true });
+    if (hasCap(ctx.host, CAP.sttOptions)) Object.assign(base, { keywords: keywordList(getKeywords()), words: true });
     const pcm = { samples, sampleRate: SAMPLE_RATE };
     const profile = getProfile();
     if (profile) return stt.transcribe(encodeWav(samples, SAMPLE_RATE), { ...base, provider: "connection", connectionId: profile });

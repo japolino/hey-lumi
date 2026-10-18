@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { FrontendCtx, SttTranscribeOptionsExt } from "../../shared/host-ext";
-import { cleanTranscript, createTranscriber } from "./transcriber";
+import { cleanTranscript, createTranscriber, keywordList } from "./transcriber";
 import type { SpeechBurst } from "./types";
 
 type Audio = Blob | { samples: Float32Array; sampleRate: number };
@@ -81,8 +81,8 @@ describe("createTranscriber", () => {
 
   test("asks for keywords and words when the host has speech-to-text-options-v1", () => {
     const { ctx, calls } = fakeCtx({ capabilities: { "speech-to-text-options-v1": 1 } });
-    void createTranscriber(ctx, () => "").transcribe(burst(1600));
-    expect(calls[0]!.options).toMatchObject({ keywords: ["Lumi"], words: true });
+    void createTranscriber(ctx, () => "", () => ["Seo-yeon"]).transcribe(burst(1600));
+    expect(calls[0]!.options).toMatchObject({ keywords: ["Lumi", "Seo-yeon"], words: true });
   });
 
   test("other errors reject the caller and free the queue", async () => {
@@ -96,6 +96,13 @@ describe("createTranscriber", () => {
     const t = createTranscriber({ host: { capabilities: {} } } as unknown as FrontendCtx, () => "");
     await expect(t.transcribe(burst(1600))).rejects.toThrow(/Speech-to-text is not available/);
   });
+});
+
+test("keywordList trims, dedupes and keeps the host limits", () => {
+  const names = [" Seo-yeon ", "Seo-yeon", "Lumi", "Line\nbreak", "x".repeat(101), "", ...Array.from({ length: 600 }, (_, i) => `n${i}`)];
+  const list = keywordList(names);
+  expect(list.slice(0, 3)).toEqual(["Lumi", "Seo-yeon", "Line break"]);
+  expect(list.length).toBe(500);
 });
 
 test("cleanTranscript strips double quotes and fixes ALL-CAPS sentences", () => {
