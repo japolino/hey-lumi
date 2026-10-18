@@ -205,7 +205,7 @@ export interface ProfileOption {
 
 export interface BackendProfiles {
   decision: ProfileOption[];
-  /** null when the host has no embeddings API (embeddings-v1). */
+  /** null when the host has no embeddings API (embeddings-v1) or the embeddings permission is not granted. */
   embedding: ProfileOption[] | null;
 }
 

@@ -97,7 +97,7 @@ export function renderSettingsPanel(deps: PanelDeps): () => Promise<void> {
       profileSelect("decision", backend.decision, ""),
       ...decisionHint,
       profileSelect("llm", llm, ""),
-      profileSelect("embedding", backend.embedding, "Embeddings for extensions need a newer Lumiverse; names are matched by text only."),
+      profileSelect("embedding", backend.embedding, "Embeddings need a Lumiverse with extension embeddings and the embeddings permission (Hey Lumi!'s hey-lumi-all branch); names are matched by text only."),
       profileSelect("tts", tts, "Choosing a TTS profile needs a newer Lumiverse."),
       check("Speak short replies", s.voiceReplies, (v) => update((n) => void (n.voiceReplies = v)), !deps.ctx.tts),
       el("b", { textContent: "Dictation format" }),
