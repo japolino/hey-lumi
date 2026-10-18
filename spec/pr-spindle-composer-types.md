@@ -1,4 +1,4 @@
-Adds types for `ctx.composer`, the chat composer bridge. Companion to the Lumiverse PR (prolix-oc/Lumiverse#TBD).
+Adds types for `ctx.composer`, the chat composer bridge. Companion to the Lumiverse PR (https://github.com/prolix-oc/Lumiverse/pull/473).
 
 - `SpindleComposerAPI`: `getState()`, `onChange(handler)`, `setText(text)`, `insertText(text, { at?: "caret" | "end" })`, `focus()`, `send(): Promise<void>`. Reading, editing and focus are free; `send` needs `generation` and runs the host's own send path (persona, attachments, group targeting, multiplayer rules).
 - `SpindleComposerState`: `{ mounted, chatId, text }`, read-only. `mounted: false` when no composer is on screen; the write methods and `send` then throw `COMPOSER_UNAVAILABLE`.

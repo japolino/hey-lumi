@@ -27,14 +27,13 @@ This PR adds `ctx.composer`:
 
 Not included: a queue-only send (`Ctrl+Enter`), attachment access, or a "chat id must match" guard on writes. Callers can compare `getState().chatId` themselves.
 
-Types: prolix-oc/lumiverse-spindle-types#TBD (`SpindleComposerAPI`, `SpindleComposerState`, `SpindleComposerInsertPosition`, `SPINDLE_COMPOSER_HOST_CAPABILITIES`, optional `ctx.composer` on `SpindleFrontendContext`). `frontend/package.json` points at that types commit until a package release includes it.
+Types: https://github.com/prolix-oc/lumiverse-spindle-types/pull/67 (`SpindleComposerAPI`, `SpindleComposerState`, `SpindleComposerInsertPosition`, `SPINDLE_COMPOSER_HOST_CAPABILITIES`, optional `ctx.composer` on `SpindleFrontendContext`). `frontend/package.json` points at that types commit until a package release includes it.
 
-> Opener note (remove before opening): the frontend pin is `github:japolino/lumiverse-spindle-types#f1ca9326e9f8e2072d21cd9de1b04c5960a624c4`; switch it to `github:prolix-oc/lumiverse-spindle-types#<sha>` after the types PR is open, run `cd frontend && bun install`, and amend.
 
 ## Validation
 
 ```text
-cd frontend && bun x tsc -b                         # 0 errors (bun run typecheck also passes on the clean branch base)
+cd frontend && bun run generate && bun x tsc -b    # 0 errors (same steps as bun run typecheck)
 bun x tsc --noEmit                                  # root, 0 errors (no backend changes)
 cd frontend && bun x eslint <the 9 changed .ts/.tsx files>   # 0 problems
 cd frontend && bun test --isolate src/lib/spindle   # 530 pass, 0 fail (clean staging 2a8d9461: 524 pass, 0 fail; +6 new)
