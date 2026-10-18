@@ -18,8 +18,9 @@ Lumiverse extension (Spindle). Working name "Lumi Voice", identifier `lumi_voice
 - Big lists are narrowed first (fuzzy name match; embeddings via the user's embedding connection profile once a host
   API exists), then Jev picks.
 - Multi-step / unknown requests -> planner LLM writes steps from the known action list; code runs them.
-- Fallback for UI with no catalog entry: screenshot + Jev Box question -> click the box centre (experimental:
-  TypeSafe images/Box are "Dreamer-ready").
+- Fallback for UI with no catalog entry: list the visible labelled controls from the DOM (extension code runs in the main
+  document) and ask Jev a text Choice; click/focus the pick. Screenshot + Jev Box is not possible: `screen_capture` is the
+  desktop client's OS capture with a picker and never returns pixels (spec/surface-audit.md section 5).
 
 ## Part 2: smart dictation for RP
 - After dictation, Jev labels each sentence (dialogue / thought / action / narration / OOC) and each boundary

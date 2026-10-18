@@ -1,0 +1,2140 @@
+{
+ "source": "buildHostSurfaceCatalog() from Lumiverse origin/staging 2a8d9461, run with bun test in a scratch worktree; core surfaces only (no extensions enabled); permission = frontend-authority-map row for invoke()",
+ "surfaces": [
+  {
+   "kind": "drawer_tab",
+   "id": "profile",
+   "label": "Profile",
+   "description": "View and edit the active character",
+   "keywords": [
+    "character",
+    "avatar",
+    "info",
+    "edit",
+    "card",
+    "description",
+    "bio",
+    "greeting",
+    "first message"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "presets",
+   "label": "Reasoning",
+   "description": "Configure reasoning, chain-of-thought, and prompt behavior",
+   "keywords": [
+    "reasoning",
+    "cot",
+    "chain of thought",
+    "thinking",
+    "reasoning effort",
+    "api reasoning",
+    "prompt bias",
+    "start reply with",
+    "prefix",
+    "suffix"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "loom",
+   "label": "Preset",
+   "description": "Configure narrative structure and story beats",
+   "keywords": [
+    "preset",
+    "presets",
+    "narrative",
+    "story",
+    "lore",
+    "structure",
+    "beats",
+    "loom",
+    "pacing",
+    "plot",
+    "sovereign hand",
+    "director"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "weaver",
+   "label": "Weaver",
+   "description": "Craft a character from your idea",
+   "keywords": [
+    "weaver",
+    "dream",
+    "character",
+    "create",
+    "ai"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "connections",
+   "label": "Connections",
+   "description": "Manage API connections and providers",
+   "keywords": [
+    "api",
+    "provider",
+    "key",
+    "openai",
+    "anthropic",
+    "model",
+    "endpoint",
+    "google",
+    "vertex",
+    "claude",
+    "gemini",
+    "openrouter",
+    "deepseek",
+    "url",
+    "secret"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "browser",
+   "label": "Pack Browser",
+   "description": "Browse and manage content packs",
+   "keywords": [
+    "packs",
+    "content",
+    "download",
+    "browse",
+    "browser",
+    "install",
+    "marketplace",
+    "library",
+    "search"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "characters",
+   "label": "Characters",
+   "description": "Browse and manage your character cards",
+   "keywords": [
+    "character",
+    "list",
+    "import",
+    "card",
+    "browse",
+    "export",
+    "png",
+    "charx",
+    "gallery",
+    "switch",
+    "select"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "personas",
+   "label": "Personas",
+   "description": "Manage your user personas",
+   "keywords": [
+    "persona",
+    "identity",
+    "user",
+    "avatar",
+    "name",
+    "sender",
+    "you",
+    "addons"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "multiplayer",
+   "label": "Multiplayer",
+   "description": "Host or join a room and chat with bots alongside friends",
+   "keywords": [
+    "multiplayer",
+    "room",
+    "party",
+    "friends",
+    "group",
+    "coop",
+    "co-op",
+    "join",
+    "host",
+    "invite",
+    "turn"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "lorebook",
+   "label": "Lorebook",
+   "description": "Edit world book and lorebook entries",
+   "keywords": [
+    "lorebook",
+    "world",
+    "lore",
+    "book",
+    "entries",
+    "worldbook",
+    "world info",
+    "wi",
+    "keywords",
+    "triggers",
+    "knowledge"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "cortex",
+   "label": "Memory Cortex",
+   "description": "View and manage memory cortex entries",
+   "keywords": [
+    "memory",
+    "cortex",
+    "embeddings",
+    "recall",
+    "brain",
+    "entities",
+    "relationships",
+    "salience",
+    "vector",
+    "long term",
+    "ltcm",
+    "facts"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "databank",
+   "label": "Databank",
+   "description": "Upload and manage reference documents for AI context",
+   "keywords": [
+    "databank",
+    "knowledge",
+    "documents",
+    "upload",
+    "files",
+    "bank",
+    "reference",
+    "data",
+    "rag"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "create",
+   "label": "Creator Workshop",
+   "description": "Create and edit Lumia items and Loom presets",
+   "keywords": [
+    "create",
+    "workshop",
+    "editor",
+    "build",
+    "new",
+    "lumia",
+    "loom",
+    "author",
+    "write",
+    "draft",
+    "custom"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "prompt",
+   "label": "Composition",
+   "description": "Pick Lumia and Loom content, Sovereign Hand, and context filters",
+   "keywords": [
+    "composition",
+    "compose",
+    "lumia",
+    "loom",
+    "sovereign hand",
+    "context filters",
+    "narrative",
+    "selection",
+    "modes"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "council",
+   "label": "Council",
+   "description": "Configure the Lumia Council and tool functions",
+   "keywords": [
+    "council",
+    "tools",
+    "agents",
+    "lumia",
+    "functions",
+    "tool use",
+    "sidecar",
+    "function calling",
+    "ooc",
+    "feedback"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "summary",
+   "label": "Summary",
+   "description": "Configure context summarization and truncation",
+   "keywords": [
+    "summary",
+    "context",
+    "truncation",
+    "compress",
+    "summarize",
+    "shorten",
+    "overflow",
+    "window",
+    "limit"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "worldinfo",
+   "label": "World Info",
+   "description": "View currently activated world info entries",
+   "keywords": [
+    "world info",
+    "activation",
+    "lorebook",
+    "active",
+    "entries",
+    "triggered",
+    "wi",
+    "matched",
+    "fired"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "imagegen",
+   "label": "Image Generation",
+   "description": "Configure and control AI scene generation",
+   "keywords": [
+    "image",
+    "generation",
+    "scene",
+    "art",
+    "picture",
+    "ai",
+    "background",
+    "novelai",
+    "nai",
+    "dalle",
+    "illustration"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "wallpaper",
+   "label": "Wallpaper",
+   "description": "Set global or per-chat background wallpapers",
+   "keywords": [
+    "wallpaper",
+    "background",
+    "backdrop",
+    "image",
+    "video",
+    "animated",
+    "mp4",
+    "webm",
+    "gif",
+    "scenery",
+    "chat background"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "regex",
+   "label": "Regex Scripts",
+   "description": "Create and manage regex find/replace scripts",
+   "keywords": [
+    "regex",
+    "find",
+    "replace",
+    "script",
+    "transform",
+    "filter",
+    "pattern",
+    "substitution",
+    "text",
+    "output",
+    "display",
+    "rewrite",
+    "format"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "branches",
+   "label": "Branch Tree",
+   "description": "View and navigate the chat branch history",
+   "keywords": [
+    "branch",
+    "fork",
+    "history",
+    "tree",
+    "navigate",
+    "alternate",
+    "swipe",
+    "undo",
+    "timeline",
+    "rewind",
+    "path"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "theme",
+   "label": "Theme",
+   "description": "Customize colors, accent, and visual style",
+   "keywords": [
+    "theme",
+    "colors",
+    "accent",
+    "appearance",
+    "dark",
+    "light",
+    "glass",
+    "radius",
+    "font",
+    "css",
+    "style",
+    "customize",
+    "ui",
+    "mode"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "drawer_tab",
+   "id": "spindle",
+   "label": "Extensions",
+   "description": "Manage Spindle extensions",
+   "keywords": [
+    "extensions",
+    "spindle",
+    "plugins",
+    "addons",
+    "install",
+    "manage",
+    "enable",
+    "disable",
+    "uninstall",
+    "github"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "account",
+   "label": "Account Settings",
+   "description": "Manage your account details and password",
+   "keywords": [
+    "account",
+    "profile",
+    "password",
+    "credentials",
+    "security",
+    "me",
+    "request",
+    "history",
+    "raw",
+    "json",
+    "generation"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "display",
+   "label": "Display & Layout",
+   "description": "Panel width, sidebar position, and layout options",
+   "keywords": [
+    "display",
+    "layout",
+    "sidebar",
+    "drawer",
+    "width",
+    "panel",
+    "position",
+    "modal",
+    "chat heads",
+    "long messages",
+    "read more",
+    "pinch",
+    "zoom"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "chat",
+   "label": "Chat Behavior",
+   "description": "Message display mode, send key, and chat options",
+   "keywords": [
+    "chat",
+    "behavior",
+    "enter to send",
+    "bubble",
+    "minimal",
+    "immersive",
+    "streaming",
+    "message"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "extensions",
+   "label": "Extension Settings",
+   "description": "Manage Spindle extension configuration",
+   "keywords": [
+    "extensions",
+    "spindle",
+    "plugins",
+    "addons",
+    "settings"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "guided",
+   "label": "Guided Generation",
+   "description": "Configure guided generation sequences and prompt biases",
+   "keywords": [
+    "guided",
+    "generation",
+    "sequences",
+    "bias",
+    "prompt",
+    "persistent"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "quickReplies",
+   "label": "Quick Replies",
+   "description": "Manage quick reply sets and message shortcuts",
+   "keywords": [
+    "quick replies",
+    "shortcuts",
+    "messages",
+    "macros",
+    "quick"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "extensionPools",
+   "label": "Extension Pools",
+   "description": "Configure extension resource pool limits",
+   "keywords": [
+    "extension",
+    "pools",
+    "resources",
+    "limits",
+    "storage"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "webSearch",
+   "label": "Web Search",
+   "description": "Configure SearXNG, Exa, or Tavily web search for council tools",
+   "keywords": [
+    "web search",
+    "searxng",
+    "exa",
+    "search",
+    "browse",
+    "internet",
+    "web",
+    "council tool"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "embeddings",
+   "label": "Embeddings",
+   "description": "Configure embedding models and vector storage",
+   "keywords": [
+    "embeddings",
+    "vectors",
+    "semantic",
+    "search",
+    "similarity",
+    "database",
+    "memory"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "memoryCortex",
+   "label": "Memory Cortex Settings",
+   "description": "Configure memory cortex extraction and salience",
+   "keywords": [
+    "memory",
+    "cortex",
+    "entities",
+    "relations",
+    "salience",
+    "extraction",
+    "brain",
+    "recall"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "notifications",
+   "label": "Notifications",
+   "description": "Configure notification preferences and alerts",
+   "keywords": [
+    "notifications",
+    "alerts",
+    "sounds",
+    "push",
+    "desktop",
+    "bell"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "voice",
+   "label": "Voice & Speech",
+   "description": "Text-to-speech, speech-to-text, and voice settings",
+   "keywords": [
+    "voice",
+    "speech",
+    "tts",
+    "stt",
+    "text to speech",
+    "speech to text",
+    "microphone",
+    "audio",
+    "speak",
+    "whisper"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "mcpServers",
+   "label": "MCP Servers",
+   "description": "Connect to external MCP tool servers for function calling",
+   "keywords": [
+    "mcp",
+    "tools",
+    "servers",
+    "model context protocol",
+    "function calling",
+    "external"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "advanced",
+   "label": "Advanced Settings",
+   "description": "Advanced configuration and debug options",
+   "keywords": [
+    "advanced",
+    "debug",
+    "config",
+    "technical",
+    "expert",
+    "context filters",
+    "reasoning"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "lumihub",
+   "label": "LumiHub",
+   "description": "LumiHub cloud sync and sharing settings",
+   "keywords": [
+    "lumihub",
+    "cloud",
+    "sync",
+    "sharing",
+    "online",
+    "hub"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "illarin",
+   "label": "Illarin",
+   "description": "Illarin asset delivery and account linking",
+   "keywords": [
+    "illarin",
+    "cloud",
+    "sync",
+    "assets",
+    "online",
+    "link"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "dataPortability",
+   "label": "Data Portability",
+   "description": "Export your data or import a previously exported archive",
+   "keywords": [
+    "data",
+    "portability",
+    "export",
+    "import",
+    "backup",
+    "restore",
+    "archive",
+    "lvbak",
+    "migrate"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "diagnostics",
+   "label": "Diagnostics",
+   "description": "System health, performance metrics, and debug info",
+   "keywords": [
+    "diagnostics",
+    "health",
+    "performance",
+    "debug",
+    "info",
+    "system",
+    "status",
+    "metrics"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "streamDeck",
+   "label": "Stream Deck Integration",
+   "description": "Create and revoke restricted tokens for the Stream Deck plugin",
+   "keywords": [
+    "stream deck",
+    "elgato",
+    "hardware",
+    "shortcut",
+    "integration token"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "ssoProviders",
+   "label": "Single Sign-On",
+   "description": "Configure owner-managed OpenID Connect sign-in providers",
+   "keywords": [
+    "sso",
+    "single sign-on",
+    "openid",
+    "oidc",
+    "oauth",
+    "authelia",
+    "authentik",
+    "keycloak",
+    "identity provider"
+   ],
+   "role": "owner",
+   "permission": null,
+   "visibleTo": "admin/owner"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "operator",
+   "label": "Operator Panel",
+   "description": "Server management, updates, and restart controls",
+   "keywords": [
+    "operator",
+    "server",
+    "restart",
+    "update",
+    "git",
+    "branch",
+    "logs",
+    "admin",
+    "image processing",
+    "image optimization",
+    "thumbnails",
+    "sharp"
+   ],
+   "role": "owner",
+   "permission": null,
+   "visibleTo": "admin/owner"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "tokenizers",
+   "label": "Tokenizer Manager",
+   "description": "Manage and test tokenizer configurations",
+   "keywords": [
+    "tokenizer",
+    "tokens",
+    "count",
+    "encoding",
+    "tiktoken",
+    "bpe"
+   ],
+   "role": "admin",
+   "permission": null,
+   "visibleTo": "admin/owner"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "users",
+   "label": "User Management",
+   "description": "Manage user accounts, roles, and permissions",
+   "keywords": [
+    "users",
+    "accounts",
+    "roles",
+    "permissions",
+    "admin",
+    "management"
+   ],
+   "role": "admin",
+   "permission": null,
+   "visibleTo": "admin/owner"
+  },
+  {
+   "kind": "settings_tab",
+   "id": "migration",
+   "label": "Migration",
+   "description": "Import data from SillyTavern and other sources",
+   "keywords": [
+    "migration",
+    "import",
+    "sillytavern",
+    "transfer",
+    "data",
+    "convert"
+   ],
+   "role": "admin",
+   "permission": null,
+   "visibleTo": "admin/owner"
+  },
+  {
+   "kind": "command",
+   "id": "action-regenerate",
+   "label": "Regenerate Response",
+   "description": "Delete the last AI reply and generate a new one",
+   "keywords": [
+    "regenerate",
+    "retry",
+    "redo",
+    "reroll",
+    "response"
+   ],
+   "scope": "chat-idle",
+   "permission": "generation",
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-continue",
+   "label": "Continue Generation",
+   "description": "Prompt the AI to continue its last response",
+   "keywords": [
+    "continue",
+    "extend",
+    "more",
+    "nudge",
+    "generation"
+   ],
+   "scope": "chat-idle",
+   "permission": "generation",
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-new-chat",
+   "label": "New Chat",
+   "description": "Go to the home screen to start a new conversation",
+   "keywords": [
+    "new",
+    "chat",
+    "start",
+    "home",
+    "begin",
+    "create"
+   ],
+   "scope": "global",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-character-browser",
+   "label": "Browse Characters",
+   "description": "Open the full character library",
+   "keywords": [
+    "characters",
+    "library",
+    "browse",
+    "list",
+    "cards"
+   ],
+   "scope": "global",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-import-character",
+   "label": "Import Character",
+   "description": "Upload a character card (.png, .charx, .jpg, .json)",
+   "keywords": [
+    "import",
+    "upload",
+    "card",
+    "character",
+    "file"
+   ],
+   "scope": "global",
+   "permission": "characters",
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-new-chat-same-character",
+   "label": "New Chat (Same Character)",
+   "description": "Start a fresh conversation with the current character",
+   "keywords": [
+    "new",
+    "chat",
+    "same",
+    "character",
+    "fresh",
+    "restart"
+   ],
+   "scope": "chat",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-fork-chat",
+   "label": "Fork Chat",
+   "description": "Branch the current chat at the latest message",
+   "keywords": [
+    "fork",
+    "branch",
+    "split",
+    "alternate",
+    "copy",
+    "diverge"
+   ],
+   "scope": "chat-idle",
+   "permission": "chats",
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-manage-chats",
+   "label": "Manage Chats",
+   "description": "Open the chat manager for the current character",
+   "keywords": [
+    "manage",
+    "chats",
+    "history",
+    "list",
+    "browse"
+   ],
+   "scope": "chat",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-copy-last-message",
+   "label": "Copy Last Message",
+   "description": "Copy the most recent message to clipboard",
+   "keywords": [
+    "copy",
+    "clipboard",
+    "last",
+    "message",
+    "response"
+   ],
+   "scope": "chat",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-delete-last-message",
+   "label": "Delete Last Message",
+   "description": "Remove the most recent message from this chat",
+   "keywords": [
+    "delete",
+    "remove",
+    "last",
+    "message",
+    "undo"
+   ],
+   "scope": "chat-idle",
+   "permission": "chats",
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-toggle-hidden-last",
+   "label": "Toggle Hide Last Message",
+   "description": "Show or hide the last message from AI context",
+   "keywords": [
+    "hide",
+    "hidden",
+    "toggle",
+    "context",
+    "message",
+    "exclude"
+   ],
+   "scope": "chat-idle",
+   "permission": "chats",
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-dry-run",
+   "label": "Preview Prompt",
+   "description": "Dry-run to see the assembled prompt and token count",
+   "keywords": [
+    "dry run",
+    "preview",
+    "prompt",
+    "tokens",
+    "assembly",
+    "debug"
+   ],
+   "scope": "chat-idle",
+   "permission": "generation",
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-edit-character",
+   "label": "Edit Character",
+   "description": "Open the character editor for the current character",
+   "keywords": [
+    "edit",
+    "character",
+    "modify",
+    "update",
+    "profile"
+   ],
+   "scope": "character",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-duplicate-character",
+   "label": "Duplicate Character",
+   "description": "Create a copy of the current character",
+   "keywords": [
+    "duplicate",
+    "clone",
+    "copy",
+    "character"
+   ],
+   "scope": "character",
+   "permission": "characters",
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-toggle-portrait",
+   "label": "Toggle Portrait Panel",
+   "description": "Show or hide the character portrait sidebar",
+   "keywords": [
+    "portrait",
+    "panel",
+    "sidebar",
+    "toggle",
+    "character",
+    "image"
+   ],
+   "scope": "chat",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "action-delete-chat",
+   "label": "Delete Chat",
+   "description": "Permanently delete this conversation",
+   "keywords": [
+    "delete",
+    "remove",
+    "destroy",
+    "chat",
+    "conversation"
+   ],
+   "scope": "chat",
+   "permission": "chats",
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-profile",
+   "label": "Profile",
+   "description": "View and edit the active character",
+   "keywords": [
+    "character",
+    "avatar",
+    "info",
+    "edit",
+    "card",
+    "description",
+    "bio",
+    "greeting",
+    "first message"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-presets",
+   "label": "Reasoning",
+   "description": "Configure reasoning, chain-of-thought, and prompt behavior",
+   "keywords": [
+    "reasoning",
+    "cot",
+    "chain of thought",
+    "thinking",
+    "reasoning effort",
+    "api reasoning",
+    "prompt bias",
+    "start reply with",
+    "prefix",
+    "suffix"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-loom",
+   "label": "Preset",
+   "description": "Configure narrative structure and story beats",
+   "keywords": [
+    "preset",
+    "presets",
+    "narrative",
+    "story",
+    "lore",
+    "structure",
+    "beats",
+    "loom",
+    "pacing",
+    "plot",
+    "sovereign hand",
+    "director"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-weaver",
+   "label": "Weaver",
+   "description": "Craft a character from your idea",
+   "keywords": [
+    "weaver",
+    "dream",
+    "character",
+    "create",
+    "ai"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-connections",
+   "label": "Connections",
+   "description": "Manage API connections and providers",
+   "keywords": [
+    "api",
+    "provider",
+    "key",
+    "openai",
+    "anthropic",
+    "model",
+    "endpoint",
+    "google",
+    "vertex",
+    "claude",
+    "gemini",
+    "openrouter",
+    "deepseek",
+    "url",
+    "secret"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-browser",
+   "label": "Pack Browser",
+   "description": "Browse and manage content packs",
+   "keywords": [
+    "packs",
+    "content",
+    "download",
+    "browse",
+    "browser",
+    "install",
+    "marketplace",
+    "library",
+    "search"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-characters",
+   "label": "Characters",
+   "description": "Browse and manage your character cards",
+   "keywords": [
+    "character",
+    "list",
+    "import",
+    "card",
+    "browse",
+    "export",
+    "png",
+    "charx",
+    "gallery",
+    "switch",
+    "select"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-personas",
+   "label": "Personas",
+   "description": "Manage your user personas",
+   "keywords": [
+    "persona",
+    "identity",
+    "user",
+    "avatar",
+    "name",
+    "sender",
+    "you",
+    "addons"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-multiplayer",
+   "label": "Multiplayer",
+   "description": "Host or join a room and chat with bots alongside friends",
+   "keywords": [
+    "multiplayer",
+    "room",
+    "party",
+    "friends",
+    "group",
+    "coop",
+    "co-op",
+    "join",
+    "host",
+    "invite",
+    "turn"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-lorebook",
+   "label": "Lorebook",
+   "description": "Edit world book and lorebook entries",
+   "keywords": [
+    "lorebook",
+    "world",
+    "lore",
+    "book",
+    "entries",
+    "worldbook",
+    "world info",
+    "wi",
+    "keywords",
+    "triggers",
+    "knowledge"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-cortex",
+   "label": "Memory Cortex",
+   "description": "View and manage memory cortex entries",
+   "keywords": [
+    "memory",
+    "cortex",
+    "embeddings",
+    "recall",
+    "brain",
+    "entities",
+    "relationships",
+    "salience",
+    "vector",
+    "long term",
+    "ltcm",
+    "facts"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-databank",
+   "label": "Databank",
+   "description": "Upload and manage reference documents for AI context",
+   "keywords": [
+    "databank",
+    "knowledge",
+    "documents",
+    "upload",
+    "files",
+    "bank",
+    "reference",
+    "data",
+    "rag"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-create",
+   "label": "Creator Workshop",
+   "description": "Create and edit Lumia items and Loom presets",
+   "keywords": [
+    "create",
+    "workshop",
+    "editor",
+    "build",
+    "new",
+    "lumia",
+    "loom",
+    "author",
+    "write",
+    "draft",
+    "custom"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-prompt",
+   "label": "Composition",
+   "description": "Pick Lumia and Loom content, Sovereign Hand, and context filters",
+   "keywords": [
+    "composition",
+    "compose",
+    "lumia",
+    "loom",
+    "sovereign hand",
+    "context filters",
+    "narrative",
+    "selection",
+    "modes"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-council",
+   "label": "Council",
+   "description": "Configure the Lumia Council and tool functions",
+   "keywords": [
+    "council",
+    "tools",
+    "agents",
+    "lumia",
+    "functions",
+    "tool use",
+    "sidecar",
+    "function calling",
+    "ooc",
+    "feedback"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-summary",
+   "label": "Summary",
+   "description": "Configure context summarization and truncation",
+   "keywords": [
+    "summary",
+    "context",
+    "truncation",
+    "compress",
+    "summarize",
+    "shorten",
+    "overflow",
+    "window",
+    "limit"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-worldinfo",
+   "label": "World Info",
+   "description": "View currently activated world info entries",
+   "keywords": [
+    "world info",
+    "activation",
+    "lorebook",
+    "active",
+    "entries",
+    "triggered",
+    "wi",
+    "matched",
+    "fired"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-imagegen",
+   "label": "Image Generation",
+   "description": "Configure and control AI scene generation",
+   "keywords": [
+    "image",
+    "generation",
+    "scene",
+    "art",
+    "picture",
+    "ai",
+    "background",
+    "novelai",
+    "nai",
+    "dalle",
+    "illustration"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-wallpaper",
+   "label": "Wallpaper",
+   "description": "Set global or per-chat background wallpapers",
+   "keywords": [
+    "wallpaper",
+    "background",
+    "backdrop",
+    "image",
+    "video",
+    "animated",
+    "mp4",
+    "webm",
+    "gif",
+    "scenery",
+    "chat background"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-regex",
+   "label": "Regex Scripts",
+   "description": "Create and manage regex find/replace scripts",
+   "keywords": [
+    "regex",
+    "find",
+    "replace",
+    "script",
+    "transform",
+    "filter",
+    "pattern",
+    "substitution",
+    "text",
+    "output",
+    "display",
+    "rewrite",
+    "format"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-branches",
+   "label": "Branch Tree",
+   "description": "View and navigate the chat branch history",
+   "keywords": [
+    "branch",
+    "fork",
+    "history",
+    "tree",
+    "navigate",
+    "alternate",
+    "swipe",
+    "undo",
+    "timeline",
+    "rewind",
+    "path"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-theme",
+   "label": "Theme",
+   "description": "Customize colors, accent, and visual style",
+   "keywords": [
+    "theme",
+    "colors",
+    "accent",
+    "appearance",
+    "dark",
+    "light",
+    "glass",
+    "radius",
+    "font",
+    "css",
+    "style",
+    "customize",
+    "ui",
+    "mode"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-spindle",
+   "label": "Extensions",
+   "description": "Manage Spindle extensions",
+   "keywords": [
+    "extensions",
+    "spindle",
+    "plugins",
+    "addons",
+    "install",
+    "manage",
+    "enable",
+    "disable",
+    "uninstall",
+    "github"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-ooc",
+   "label": "OOC",
+   "description": "Out-of-character comment display settings",
+   "keywords": [
+    "ooc",
+    "out of character",
+    "comments",
+    "irc",
+    "social",
+    "chat",
+    "meta",
+    "parentheses",
+    "brackets"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "panel-feedback",
+   "label": "Council Feedback",
+   "description": "View the latest council execution results",
+   "keywords": [
+    "feedback",
+    "council",
+    "results",
+    "tools",
+    "output",
+    "debug",
+    "log",
+    "response",
+    "execution",
+    "trace"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-account",
+   "label": "Account Settings",
+   "description": "Manage your account details and password",
+   "keywords": [
+    "account",
+    "profile",
+    "password",
+    "credentials",
+    "security",
+    "me",
+    "request",
+    "history",
+    "raw",
+    "json",
+    "generation"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-display",
+   "label": "Display & Layout",
+   "description": "Panel width, sidebar position, and layout options",
+   "keywords": [
+    "display",
+    "layout",
+    "sidebar",
+    "drawer",
+    "width",
+    "panel",
+    "position",
+    "modal",
+    "chat heads",
+    "long messages",
+    "read more",
+    "pinch",
+    "zoom"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-chat",
+   "label": "Chat Behavior",
+   "description": "Message display mode, send key, and chat options",
+   "keywords": [
+    "chat",
+    "behavior",
+    "enter to send",
+    "bubble",
+    "minimal",
+    "immersive",
+    "streaming",
+    "message"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-extensions",
+   "label": "Extension Settings",
+   "description": "Manage Spindle extension configuration",
+   "keywords": [
+    "extensions",
+    "spindle",
+    "plugins",
+    "addons",
+    "settings"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-guided",
+   "label": "Guided Generation",
+   "description": "Configure guided generation sequences and prompt biases",
+   "keywords": [
+    "guided",
+    "generation",
+    "sequences",
+    "bias",
+    "prompt",
+    "persistent"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-quickReplies",
+   "label": "Quick Replies",
+   "description": "Manage quick reply sets and message shortcuts",
+   "keywords": [
+    "quick replies",
+    "shortcuts",
+    "messages",
+    "macros",
+    "quick"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-extensionPools",
+   "label": "Extension Pools",
+   "description": "Configure extension resource pool limits",
+   "keywords": [
+    "extension",
+    "pools",
+    "resources",
+    "limits",
+    "storage"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-webSearch",
+   "label": "Web Search",
+   "description": "Configure SearXNG, Exa, or Tavily web search for council tools",
+   "keywords": [
+    "web search",
+    "searxng",
+    "exa",
+    "search",
+    "browse",
+    "internet",
+    "web",
+    "council tool"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-embeddings",
+   "label": "Embeddings",
+   "description": "Configure embedding models and vector storage",
+   "keywords": [
+    "embeddings",
+    "vectors",
+    "semantic",
+    "search",
+    "similarity",
+    "database",
+    "memory"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-memoryCortex",
+   "label": "Memory Cortex Settings",
+   "description": "Configure memory cortex extraction and salience",
+   "keywords": [
+    "memory",
+    "cortex",
+    "entities",
+    "relations",
+    "salience",
+    "extraction",
+    "brain",
+    "recall"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-notifications",
+   "label": "Notifications",
+   "description": "Configure notification preferences and alerts",
+   "keywords": [
+    "notifications",
+    "alerts",
+    "sounds",
+    "push",
+    "desktop",
+    "bell"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-voice",
+   "label": "Voice & Speech",
+   "description": "Text-to-speech, speech-to-text, and voice settings",
+   "keywords": [
+    "voice",
+    "speech",
+    "tts",
+    "stt",
+    "text to speech",
+    "speech to text",
+    "microphone",
+    "audio",
+    "speak",
+    "whisper"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-mcpServers",
+   "label": "MCP Servers",
+   "description": "Connect to external MCP tool servers for function calling",
+   "keywords": [
+    "mcp",
+    "tools",
+    "servers",
+    "model context protocol",
+    "function calling",
+    "external"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-advanced",
+   "label": "Advanced Settings",
+   "description": "Advanced configuration and debug options",
+   "keywords": [
+    "advanced",
+    "debug",
+    "config",
+    "technical",
+    "expert",
+    "context filters",
+    "reasoning"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-lumihub",
+   "label": "LumiHub",
+   "description": "LumiHub cloud sync and sharing settings",
+   "keywords": [
+    "lumihub",
+    "cloud",
+    "sync",
+    "sharing",
+    "online",
+    "hub"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-illarin",
+   "label": "Illarin",
+   "description": "Illarin asset delivery and account linking",
+   "keywords": [
+    "illarin",
+    "cloud",
+    "sync",
+    "assets",
+    "online",
+    "link"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-dataPortability",
+   "label": "Data Portability",
+   "description": "Export your data or import a previously exported archive",
+   "keywords": [
+    "data",
+    "portability",
+    "export",
+    "import",
+    "backup",
+    "restore",
+    "archive",
+    "lvbak",
+    "migrate"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-diagnostics",
+   "label": "Diagnostics",
+   "description": "System health, performance metrics, and debug info",
+   "keywords": [
+    "diagnostics",
+    "health",
+    "performance",
+    "debug",
+    "info",
+    "system",
+    "status",
+    "metrics"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-streamDeck",
+   "label": "Stream Deck Integration",
+   "description": "Create and revoke restricted tokens for the Stream Deck plugin",
+   "keywords": [
+    "stream deck",
+    "elgato",
+    "hardware",
+    "shortcut",
+    "integration token"
+   ],
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "command",
+   "id": "settings-ssoProviders",
+   "label": "Single Sign-On",
+   "description": "Configure owner-managed OpenID Connect sign-in providers",
+   "keywords": [
+    "sso",
+    "single sign-on",
+    "openid",
+    "oidc",
+    "oauth",
+    "authelia",
+    "authentik",
+    "keycloak",
+    "identity provider"
+   ],
+   "permission": null,
+   "visibleTo": "admin/owner"
+  },
+  {
+   "kind": "command",
+   "id": "settings-operator",
+   "label": "Operator Panel",
+   "description": "Server management, updates, and restart controls",
+   "keywords": [
+    "operator",
+    "server",
+    "restart",
+    "update",
+    "git",
+    "branch",
+    "logs",
+    "admin",
+    "image processing",
+    "image optimization",
+    "thumbnails",
+    "sharp"
+   ],
+   "permission": null,
+   "visibleTo": "admin/owner"
+  },
+  {
+   "kind": "command",
+   "id": "settings-tokenizers",
+   "label": "Tokenizer Manager",
+   "description": "Manage and test tokenizer configurations",
+   "keywords": [
+    "tokenizer",
+    "tokens",
+    "count",
+    "encoding",
+    "tiktoken",
+    "bpe"
+   ],
+   "permission": null,
+   "visibleTo": "admin/owner"
+  },
+  {
+   "kind": "command",
+   "id": "settings-users",
+   "label": "User Management",
+   "description": "Manage user accounts, roles, and permissions",
+   "keywords": [
+    "users",
+    "accounts",
+    "roles",
+    "permissions",
+    "admin",
+    "management"
+   ],
+   "permission": null,
+   "visibleTo": "admin/owner"
+  },
+  {
+   "kind": "command",
+   "id": "settings-migration",
+   "label": "Migration",
+   "description": "Import data from SillyTavern and other sources",
+   "keywords": [
+    "migration",
+    "import",
+    "sillytavern",
+    "transfer",
+    "data",
+    "convert"
+   ],
+   "permission": null,
+   "visibleTo": "admin/owner"
+  },
+  {
+   "kind": "route",
+   "id": "/",
+   "label": "Home",
+   "description": "Open the home screen",
+   "scope": "global",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "route",
+   "id": "/chat/:chatId",
+   "label": "Chat",
+   "description": "Open a chat by id",
+   "scope": "chat",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "route",
+   "id": "/characters",
+   "label": "Characters",
+   "description": "Open the character library",
+   "scope": "global",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "route",
+   "id": "/characters/:id",
+   "label": "Character",
+   "description": "Open a character profile",
+   "scope": "character",
+   "permission": null,
+   "visibleTo": "all"
+  },
+  {
+   "kind": "modal",
+   "id": "character_editor",
+   "label": "Character editor",
+   "description": "Open the character editor",
+   "scope": "character",
+   "permission": "characters",
+   "visibleTo": "all"
+  },
+  {
+   "kind": "modal",
+   "id": "world_book_editor",
+   "label": "World book editor",
+   "description": "Open a world book editor",
+   "scope": "global",
+   "permission": "world_books",
+   "visibleTo": "all"
+  }
+ ]
+}
