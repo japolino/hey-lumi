@@ -82,21 +82,21 @@ export function recentFirst(items: EntityOption[], recentIds: string[]): EntityO
 
 export function isRpcRequest(payload: unknown): payload is RpcRequest {
   const p = payload as RpcRequest | null;
-  return !!p && p.type === "lumi_voice:req" && typeof p.id === "string" && typeof p.method === "string";
+  return !!p && p.type === "hey_lumi:req" && typeof p.id === "string" && typeof p.method === "string";
 }
 
-/** "CODE: message" errors keep their code; anything else is LUMI_VOICE_ERROR. */
+/** "CODE: message" errors keep their code; anything else is HEY_LUMI_ERROR. */
 export function errorResponse(id: string, error: unknown): RpcResponse {
   const message = error instanceof Error ? error.message : String(error);
-  const code = /^([A-Z][A-Z0-9_]+)(?::|$)/.exec(message)?.[1] ?? "LUMI_VOICE_ERROR";
-  return { type: "lumi_voice:res", id, ok: false, error: { code, message } };
+  const code = /^([A-Z][A-Z0-9_]+)(?::|$)/.exec(message)?.[1] ?? "HEY_LUMI_ERROR";
+  return { type: "hey_lumi:res", id, ok: false, error: { code, message } };
 }
 
 export async function handleRpc(handlers: Handlers, req: RpcRequest, userId?: string): Promise<RpcResponse> {
   const handler = handlers[req.method] as ((params: unknown, userId?: string) => Promise<unknown>) | undefined;
   if (!handler) return errorResponse(req.id, new Error(`UNKNOWN_METHOD: ${req.method}`));
   try {
-    return { type: "lumi_voice:res", id: req.id, ok: true, result: (await handler(req.params, userId)) as never };
+    return { type: "hey_lumi:res", id: req.id, ok: true, result: (await handler(req.params, userId)) as never };
   } catch (error) {
     return errorResponse(req.id, error);
   }

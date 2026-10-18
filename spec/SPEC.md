@@ -1,4 +1,4 @@
-# Lumi Voice v0 spec
+# Hey Lumi! v0 spec
 
 Read with DESIGN.md (user decisions), surface-audit.md + surface-catalog.json (what the host exposes),
 audio-feasibility.md (audio facts), dictation-bench.md (measured Jev pipeline; code in scratch/dictation-bench/).

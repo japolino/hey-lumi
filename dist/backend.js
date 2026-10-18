@@ -1197,7 +1197,7 @@ function createServices(host, settings, userId) {
       return image?.width && image.height ? { width: image.width, height: image.height } : null;
     },
     log(level, message) {
-      host.log[level](`[lumi_voice] ${message}`);
+      host.log[level](`[hey_lumi] ${message}`);
     }
   };
 }
@@ -1273,19 +1273,19 @@ function recentFirst(items, recentIds) {
 }
 function isRpcRequest(payload) {
   const p = payload;
-  return !!p && p.type === "lumi_voice:req" && typeof p.id === "string" && typeof p.method === "string";
+  return !!p && p.type === "hey_lumi:req" && typeof p.id === "string" && typeof p.method === "string";
 }
 function errorResponse(id, error) {
   const message = error instanceof Error ? error.message : String(error);
-  const code = /^([A-Z][A-Z0-9_]+)(?::|$)/.exec(message)?.[1] ?? "LUMI_VOICE_ERROR";
-  return { type: "lumi_voice:res", id, ok: false, error: { code, message } };
+  const code = /^([A-Z][A-Z0-9_]+)(?::|$)/.exec(message)?.[1] ?? "HEY_LUMI_ERROR";
+  return { type: "hey_lumi:res", id, ok: false, error: { code, message } };
 }
 async function handleRpc(handlers, req, userId) {
   const handler = handlers[req.method];
   if (!handler)
     return errorResponse(req.id, new Error(`UNKNOWN_METHOD: ${req.method}`));
   try {
-    return { type: "lumi_voice:res", id: req.id, ok: true, result: await handler(req.params, userId) };
+    return { type: "hey_lumi:res", id: req.id, ok: true, result: await handler(req.params, userId) };
   } catch (error) {
     return errorResponse(req.id, error);
   }
@@ -1299,7 +1299,7 @@ spindle.onFrontendMessage(async (payload, userId, frontendSessionId) => {
     return;
   const response = await handleRpc(handlers, payload, userId);
   if (!response.ok)
-    spindle.log.warn(`[lumi_voice] ${payload.method} failed: ${response.error.message}`);
+    spindle.log.warn(`[hey_lumi] ${payload.method} failed: ${response.error.message}`);
   spindle.sendToFrontend(response, userId, frontendSessionId ? { frontendSessionId } : undefined);
 });
 for (const event of ["CHARACTER_CREATED", "CHARACTER_EDITED", "CHARACTER_DELETED", "CHARACTER_LIBRARY_CHANGED", "PERSONA_CHANGED", "PRESET_CHANGED", "PRESET_DELETED"]) {

@@ -63,8 +63,10 @@ function harness(routes: RouteResult[], opts: { idleSec?: number } = {}) {
     bubbleElement: () => null,
     render: (v) => void views.push(v),
   });
-  const say = async (text: string) => {
-    for (const l of burstListeners) l({ text } as unknown as SpeechBurst);
+  const say = async (text: string, startedBeforeOpen = false) => {
+    const now = performance.now();
+    const burst = { text, endedAt: now, durationMs: startedBeforeOpen ? 10_000 : 0 };
+    for (const l of burstListeners) l(burst as unknown as SpeechBurst);
     await Bun.sleep(5);
   };
   return {
@@ -150,4 +152,15 @@ test("the session closes after the idle timeout", async () => {
   h.session.open();
   await Bun.sleep(60);
   expect(h.last().phase).toBe("closed");
+});
+
+test("after a frame-based wake, the burst that held the wake word is stripped, not a close", async () => {
+  const h = harness([run("surface:drawer_tab:theme", "Opening Theme")]);
+  await h.session.startWake();
+  await h.wakeHit("");
+  await h.say("Hey Lumi.", true);
+  expect(h.last().phase).toBe("listening");
+  expect(h.routeCalls.length).toBe(0);
+  await h.say("Hey Lumi, open my themes", true);
+  expect(h.routeCalls[0]!.utterance).toBe("open my themes");
 });

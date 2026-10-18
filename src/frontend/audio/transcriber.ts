@@ -46,7 +46,7 @@ export function createTranscriber(ctx: FrontendCtx, getProfile: () => string, ge
 
   const request = async (samples: Float32Array): Promise<TranscriptResult> => {
     const stt = ctx.stt;
-    if (!stt) throw new Error("Speech-to-text is not available: Lumi Voice needs the 'media' permission and a Lumiverse with ctx.stt.");
+    if (!stt) throw new Error("Speech-to-text is not available: Hey Lumi! needs the 'media' permission and a Lumiverse with ctx.stt.");
     const base: SttTranscribeOptionsExt = { language: "en" };
     if (hasCap(ctx.host, CAP.sttOptions)) Object.assign(base, { keywords: keywordList(getKeywords()), words: true });
     const pcm = { samples, sampleRate: SAMPLE_RATE };

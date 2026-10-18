@@ -1,15 +1,17 @@
 import type { ConnectionKind, FrontendCtx } from "../shared/host-ext";
 import type { BackendProfiles, ProfileOption } from "../shared/protocol";
-import type { LumiVoiceSettings } from "../shared/settings";
+import type { HeyLumiSettings } from "../shared/settings";
 
 export interface PanelDeps {
   ctx: FrontendCtx;
   root: HTMLElement;
-  settings(): LumiVoiceSettings;
-  save(next: LumiVoiceSettings): void;
+  settings(): HeyLumiSettings;
+  save(next: HeyLumiSettings): void;
   listening(): boolean;
   toggleListening(): void;
   status(): string;
+  /** Live line: which wake word detector runs, download progress. */
+  wakeLine: HTMLElement;
   /** Host feature name -> available. */
   support(): Array<{ name: string; ok: boolean }>;
   backendProfiles(): Promise<BackendProfiles>;
@@ -28,12 +30,12 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, props: Record<string,
   return node;
 }
 
-/** The "Lumi Voice" drawer tab: start/stop, host support, profile per kind, dictation format. */
+/** The "Hey Lumi!" drawer tab: start/stop, host support, profile per kind, dictation format. */
 export function renderSettingsPanel(deps: PanelDeps): () => Promise<void> {
   const { root } = deps;
   root.style.cssText = "padding:12px;display:flex;flex-direction:column;gap:12px;font-size:13px";
 
-  const update = (patch: (s: LumiVoiceSettings) => void) => {
+  const update = (patch: (s: HeyLumiSettings) => void) => {
     const next = structuredClone(deps.settings());
     patch(next);
     deps.save(next);
@@ -54,7 +56,7 @@ export function renderSettingsPanel(deps: PanelDeps): () => Promise<void> {
     const backend = await deps.backendProfiles().catch(() => ({ decision: [], embedding: null }) as BackendProfiles);
     const [stt, llm, tts] = await Promise.all([kindProfiles(deps.ctx, "stt"), kindProfiles(deps.ctx, "llm"), kindProfiles(deps.ctx, "tts")]);
 
-    const profileSelect = (key: keyof LumiVoiceSettings["profiles"], list: ProfileOption[] | null, missing: string) =>
+    const profileSelect = (key: keyof HeyLumiSettings["profiles"], list: ProfileOption[] | null, missing: string) =>
       list
         ? row(
             key === "decision" ? "Decision (Jev)" : key === "llm" ? "LLM" : key === "stt" ? "Speech to text" : key === "tts" ? "Text to speech" : "Embedding",
@@ -67,7 +69,7 @@ export function renderSettingsPanel(deps: PanelDeps): () => Promise<void> {
     const decision = backend.decision.find((p) => (s.profiles.decision ? p.id === s.profiles.decision : p.isDefault));
     const decisionHint =
       decision?.model && !/jev-preview|1\.14/i.test(decision.model)
-        ? [el("small", { textContent: `This profile uses ${decision.model}. Lumi Voice is tuned for Jev 1.14 (jev-preview); matching by looks needs it.`, style: "opacity:.75" })]
+        ? [el("small", { textContent: `This profile uses ${decision.model}. Hey Lumi! is tuned for Jev 1.14 (jev-preview); matching by looks needs it.`, style: "opacity:.75" })]
         : [];
 
     const listenBtn = el("button", { type: "button", textContent: deps.listening() ? "Stop listening" : "Start listening" });
@@ -88,6 +90,7 @@ export function renderSettingsPanel(deps: PanelDeps): () => Promise<void> {
       el("div", { style: "display:flex;gap:8px;align-items:center" }, listenBtn, el("span", { textContent: deps.status() })),
       el("small", { textContent: 'Say "Hey Lumi", then a command ("open my themes") or text to write. Say "that\'s all" or press Escape to close.', style: "opacity:.75" }),
       check('Wake word "Hey Lumi"', s.wakeWord, (v) => update((n) => void (n.wakeWord = v))),
+      deps.wakeLine,
       row("Close after silence (seconds)", idle),
       el("b", { textContent: "Connection profiles" }),
       profileSelect("stt", stt, "Choosing an STT profile needs a newer Lumiverse; the Voice & Speech setting is used (Whistle if it cannot transcribe audio)."),
@@ -98,9 +101,9 @@ export function renderSettingsPanel(deps: PanelDeps): () => Promise<void> {
       profileSelect("tts", tts, "Choosing a TTS profile needs a newer Lumiverse."),
       check("Speak short replies", s.voiceReplies, (v) => update((n) => void (n.voiceReplies = v)), !deps.ctx.tts),
       el("b", { textContent: "Dictation format" }),
-      row("Thoughts", select([["asterisks", "*In italics*"], ["plain", "Plain"]], s.format.thought, (v) => update((n) => void (n.format.thought = v as LumiVoiceSettings["format"]["thought"])))),
-      row("Dialogue quotes", select([["straight", '"Straight"'], ["curly", "“Curly”"]], s.format.quotes, (v) => update((n) => void (n.format.quotes = v as LumiVoiceSettings["format"]["quotes"])))),
-      row("Out of character", select([["double_parens", "((OOC))"], ["brackets", "[OOC]"]], s.format.ooc, (v) => update((n) => void (n.format.ooc = v as LumiVoiceSettings["format"]["ooc"])))),
+      row("Thoughts", select([["asterisks", "*In italics*"], ["plain", "Plain"]], s.format.thought, (v) => update((n) => void (n.format.thought = v as HeyLumiSettings["format"]["thought"])))),
+      row("Dialogue quotes", select([["straight", '"Straight"'], ["curly", "“Curly”"]], s.format.quotes, (v) => update((n) => void (n.format.quotes = v as HeyLumiSettings["format"]["quotes"])))),
+      row("Out of character", select([["double_parens", "((OOC))"], ["brackets", "[OOC]"]], s.format.ooc, (v) => update((n) => void (n.format.ooc = v as HeyLumiSettings["format"]["ooc"])))),
       el("b", { textContent: "Lumiverse support" }),
       el("ul", { style: "margin:0;padding-left:18px" }, ...deps.support().map((f) => el("li", { textContent: `${f.ok ? "✓" : "✗"} ${f.name}` }))),
     );

@@ -39,7 +39,7 @@ export function createTextWakeDetector(transcriber: Transcriber): WakeDetector {
     async start(source: AudioSource, onWake) {
       off?.();
       const unsubscribe = source.onBurst((burst) => {
-        check(burst, onWake, () => off === stop).catch((error) => console.warn("[lumi-voice] wake transcription failed", error));
+        check(burst, onWake, () => off === stop).catch((error) => console.warn("[hey-lumi] wake transcription failed", error));
       });
       const stop = () => unsubscribe();
       off = stop;

@@ -1,9 +1,11 @@
 /**
- * Lumi Voice frontend: mic + speech-activity bursts, wake word, the session bubble, and running actions on the host.
+ * Hey Lumi! frontend: mic + speech-activity bursts, wake word, the session bubble, and running actions on the host.
  */
 import { CAP, hasCap, type FrontendCtx, type HostSurfaceInfo } from "./shared/host-ext";
-import { DEFAULT_SETTINGS, normalizeSettings, SETTINGS_KEY, type LumiVoiceSettings } from "./shared/settings";
+import { DEFAULT_SETTINGS, normalizeSettings, SETTINGS_KEY, type HeyLumiSettings } from "./shared/settings";
 import { createMicCapture, createTextWakeDetector, createTranscriber, matchWake, MicError, watchPauseGates, type WakeDetector } from "./frontend/audio/index";
+import { KwsWakeDetector } from "./frontend/audio/kws/kws-wake-detector";
+import { createWakeSelector, type WakeStatus } from "./frontend/audio/wake-select";
 import { createBubble, type PillState } from "./frontend/bubble";
 import { buildCandidates, createFrontendEntities } from "./frontend/candidates";
 import { createDraft } from "./frontend/draft";
@@ -15,10 +17,17 @@ const LISTENING_KEY = "voice:listening";
 const MIC_ICON =
   '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
 
+function wakeText(status: WakeStatus): string {
+  if (status.detector === "kws") return "Wake word: on-device detector.";
+  if (status.state === "loading_kws") return `Wake word: downloading the on-device detector (${Math.round(status.progress * 100)}%); speech-to-text match until then.`;
+  if (status.state === "kws_failed") return `Wake word: speech-to-text match (on-device detector unavailable: ${status.error}).`;
+  return "Wake word: speech-to-text match (this browser has no WebAssembly).";
+}
+
 export function setup(rawCtx: unknown) {
   const ctx = rawCtx as FrontendCtx;
   const cleanups: Array<() => void> = [];
-  let settings: LumiVoiceSettings = DEFAULT_SETTINGS;
+  let settings: HeyLumiSettings = DEFAULT_SETTINGS;
 
   const rpc = createRpc(ctx);
   cleanups.push(() => rpc.dispose());
@@ -60,8 +69,18 @@ export function setup(rawCtx: unknown) {
   const capture = createMicCapture();
   let names: string[] = [];
   const transcriber = createTranscriber(ctx, () => settings.profiles.stt, () => names);
-  const textWake = createTextWakeDetector(transcriber);
-  const wake = (): WakeDetector | null => (settings.wakeWord ? textWake : null);
+  const wakeLine = document.createElement("small");
+  wakeLine.textContent = "Wake word: starts with the microphone.";
+  const showWake = (status: WakeStatus) => {
+    wakeLine.textContent = wakeText(status);
+    document.querySelector<HTMLElement>("[data-hey-lumi]")?.setAttribute("data-wake", status.detector);
+  };
+  const wakeDetector = createWakeSelector({
+    kws: () => new KwsWakeDetector({ onProgress: (progress) => showWake({ detector: "text", state: "loading_kws", progress }) }),
+    text: createTextWakeDetector(transcriber),
+    onStatus: showWake,
+  });
+  const wake = (): WakeDetector | null => (settings.wakeWord ? wakeDetector : null);
   const tts = ctx.tts && hasCap(ctx.host, CAP.tts) ? ctx.tts : null;
   const speak = tts
     ? async (text: string) => {
@@ -74,7 +93,7 @@ export function setup(rawCtx: unknown) {
       }
     : undefined;
 
-  let pill: PillState = { mic: "off", title: "Lumi Voice: click to start listening" };
+  let pill: PillState = { mic: "off", title: "Hey Lumi! · click to start listening" };
   const setPill = (next: PillState) => {
     pill = next;
     bubble.pill(next);
@@ -103,17 +122,18 @@ export function setup(rawCtx: unknown) {
   let stopGates: (() => void) | null = null;
   async function startListening() {
     if (capture.running) return;
-    setPill({ mic: "starting", title: "Lumi Voice: starting the microphone..." });
+    setPill({ mic: "starting", title: "Hey Lumi! · starting the microphone..." });
     try {
       rpc.call("listNames", {}).then((list) => void (names = list), () => {});
       await capture.start();
       stopGates = watchPauseGates(ctx, capture);
-      await session.startWake();
-      setPill({ mic: "listening", title: settings.wakeWord ? 'Lumi Voice: say "Hey Lumi" (or click)' : "Lumi Voice: click to talk" });
+      // The first start downloads the on-device wake word; the text match listens meanwhile.
+      void session.startWake();
+      setPill({ mic: "listening", title: settings.wakeWord ? 'Hey Lumi! · say "Hey Lumi" (or click)' : "Hey Lumi! · click to talk" });
       void ctx.settings?.set(LISTENING_KEY, true);
     } catch (error) {
       const text = error instanceof MicError || error instanceof Error ? error.message : String(error);
-      setPill({ mic: "error", title: `Lumi Voice: ${text}` });
+      setPill({ mic: "error", title: `Hey Lumi! · ${text}` });
       session.notice(text);
     }
     void refreshPanel();
@@ -124,7 +144,7 @@ export function setup(rawCtx: unknown) {
     stopGates?.();
     stopGates = null;
     capture.stop();
-    setPill({ mic: "off", title: "Lumi Voice: click to start listening" });
+    setPill({ mic: "off", title: "Hey Lumi! · click to start listening" });
     void ctx.settings?.set(LISTENING_KEY, false);
     void refreshPanel();
   }
@@ -162,9 +182,9 @@ export function setup(rawCtx: unknown) {
   };
 
   const tab = ctx.ui.registerDrawerTab({
-    id: "lumi_voice",
-    title: "Lumi Voice",
-    shortName: "Voice",
+    id: "hey_lumi",
+    title: "Hey Lumi!",
+    shortName: "Lumi",
     description: "Voice control and dictation settings",
     keywords: ["voice", "lumi", "dictation", "microphone", "wake word", "hey lumi"],
     iconSvg: MIC_ICON,
@@ -184,15 +204,16 @@ export function setup(rawCtx: unknown) {
     },
     listening: () => capture.running,
     toggleListening,
-    status: () => pill.title.replace(/^Lumi Voice: /, ""),
+    status: () => pill.title.replace(/^Hey Lumi! · /, ""),
+    wakeLine,
     support,
     backendProfiles: () => rpc.call("listProfiles", {}),
   });
   cleanups.push(tab.onActivate(() => void refreshPanel()));
 
-  const action = ctx.ui.registerInputBarAction({ id: "lumi_voice_toggle", label: "Lumi Voice", subtitle: "Start or stop listening", iconSvg: MIC_ICON });
+  const action = ctx.ui.registerInputBarAction({ id: "hey_lumi_toggle", label: "Hey Lumi!", subtitle: "Start or stop listening", iconSvg: MIC_ICON });
   cleanups.push(action.onClick(toggleListening), () => action.destroy());
-  /** The catalog's owner id for Lumi Voice's own entries (the host uses its extension id). */
+  /** The catalog's owner id for Hey Lumi!'s own entries (the host uses its extension id). */
   function ownOwner(): string | undefined {
     if (!ready) return undefined;
     return surfaces.find((s) => (s.kind === "drawer_tab" && s.id === tab.tabId) || (s.kind === "input_bar_action" && s.id === action.actionId))?.owner;
@@ -209,7 +230,7 @@ export function setup(rawCtx: unknown) {
       const resume = () => void startListening();
       document.addEventListener("pointerdown", resume, { once: true, capture: true });
       cleanups.push(() => document.removeEventListener("pointerdown", resume, { capture: true }));
-      setPill({ mic: "off", title: "Lumi Voice: click anywhere to resume listening" });
+      setPill({ mic: "off", title: "Hey Lumi! · click anywhere to resume listening" });
     }
   })();
 

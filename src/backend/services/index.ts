@@ -64,7 +64,7 @@ export function createServices(host: BackendHost, settings: RouterSettings, user
       return image?.width && image.height ? { width: image.width, height: image.height } : null;
     },
     log(level, message) {
-      host.log[level](`[lumi_voice] ${message}`);
+      host.log[level](`[hey_lumi] ${message}`);
     },
   };
 }

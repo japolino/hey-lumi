@@ -1,7 +1,7 @@
 import type { FrontendCtx, HostSurfaceInfo } from "../shared/host-ext";
 import type { ActionCandidate, PendingAsk, PlanStep, RouteContext, RouteResult } from "../shared/protocol";
 import type { FrontendEntities } from "./candidates";
-import { routerSettings, type LumiVoiceSettings } from "../shared/settings";
+import { routerSettings, type HeyLumiSettings } from "../shared/settings";
 import { runStep, type SessionActions, type StepOutcome } from "./actions";
 import type { AudioSource, Transcriber, WakeDetector } from "./audio/types";
 import { activateControl, collectControls } from "./dom-fallback";
@@ -37,7 +37,7 @@ export interface SessionDeps {
   /** null when the wake word is off: the session opens only by click. */
   wake: () => WakeDetector | null;
   matchWake(text: string): { rest: string } | null;
-  settings(): LumiVoiceSettings;
+  settings(): HeyLumiSettings;
   surfaces(): HostSurfaceInfo[];
   candidates(): ActionCandidate[];
   entities(): Promise<FrontendEntities>;
@@ -71,6 +71,8 @@ export function createSession(deps: SessionDeps) {
   const undoStack: string[] = [];
   let lastInsert: string | null = null;
   let wakeRunning: WakeDetector | null = null;
+  /** performance.now() when the session opened; a burst that started before it holds the wake word. */
+  let openedAt = 0;
   const offs: Array<() => void> = [];
 
   const render = () => deps.render({ phase, heard, said, options, hearing });
@@ -110,6 +112,7 @@ export function createSession(deps: SessionDeps) {
   function open(first = "") {
     if (phase !== "closed") return;
     stopWake();
+    openedAt = performance.now();
     history = [];
     pending = undefined;
     confirmRun = null;
@@ -133,7 +136,7 @@ export function createSession(deps: SessionDeps) {
     if (deps.speak && deps.settings().voiceReplies && text) await deps.speak(text).catch(() => {});
   }
 
-  async function utterance(text: string) {
+  async function utterance(text: string, wakeBurst = false) {
     if (phase === "closed") return;
     if (busy) {
       queued = queued ? `${queued} ${text}` : text;
@@ -142,7 +145,7 @@ export function createSession(deps: SessionDeps) {
     busy = true;
     clearTimeout(idleTimer);
     try {
-      await handle(text);
+      await handle(text, wakeBurst);
     } catch (error) {
       set({ phase: "listening", options: [] });
       await say(`Something went wrong: ${message(error)}`);
@@ -157,11 +160,12 @@ export function createSession(deps: SessionDeps) {
     }
   }
 
-  async function handle(raw: string) {
+  /** `wakeBurst`: the speech that opened the session (a frame-based detector opens it before the burst ends). */
+  async function handle(raw: string, wakeBurst: boolean) {
     let text = raw.trim();
     const wake = deps.matchWake(text);
     if (wake) {
-      if (!wake.rest) return close();
+      if (!wake.rest && !wakeBurst) return close();
       text = wake.rest;
     }
     if (!text) return;
@@ -411,9 +415,10 @@ export function createSession(deps: SessionDeps) {
       if (phase === "closed") return;
       hearing = false;
       render();
+      const wakeBurst = burst.endedAt - burst.durationMs < openedAt;
       void deps.transcriber.transcribe(burst).then(
         (res) => {
-          if (res && res.text.trim()) void utterance(res.text);
+          if (res && res.text.trim()) void utterance(res.text, wakeBurst);
           else armIdle();
         },
         (error) => void say(`Speech to text failed: ${message(error)}`),

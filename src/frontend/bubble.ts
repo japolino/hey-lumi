@@ -13,28 +13,28 @@ export interface BubbleHandlers {
 }
 
 const CSS = `
-.lumi-voice{position:fixed;right:16px;bottom:96px;z-index:100000;font:13px/1.4 var(--lumiverse-font-family,system-ui,sans-serif);color:var(--lumiverse-text,#eee)}
-.lumi-voice *{box-sizing:border-box}
-.lumi-voice-pill{display:flex;align-items:center;gap:6px;margin-left:auto;padding:6px 10px;border-radius:999px;border:1px solid var(--lumiverse-border-light,#ffffff22);background:var(--lumiverse-bg-elevated,#222);color:inherit;cursor:pointer;font:inherit;box-shadow:0 2px 10px #0004}
-.lumi-voice-dot{width:9px;height:9px;border-radius:50%;background:var(--lumiverse-text-dim,#888)}
-.lumi-voice[data-mic=listening] .lumi-voice-dot{background:var(--lumiverse-primary,#8b5cf6)}
-.lumi-voice[data-mic=paused] .lumi-voice-dot{background:var(--lumiverse-warning,#d97706)}
-.lumi-voice[data-mic=error] .lumi-voice-dot{background:var(--lumiverse-danger,#dc2626)}
-.lumi-voice[data-mic=starting] .lumi-voice-dot{opacity:.5}
-.lumi-voice-panel{width:300px;padding:10px 12px;border-radius:14px;border:1px solid var(--lumiverse-border-light,#ffffff22);background:var(--lumiverse-bg-elevated,#222);box-shadow:0 6px 24px #0006}
-.lumi-voice-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.lumi-voice-head b{flex:1;font-weight:600}
-.lumi-voice[data-phase=listening] .lumi-voice-panel .lumi-voice-dot{background:var(--lumiverse-primary,#8b5cf6)}
-.lumi-voice[data-hearing=true] .lumi-voice-panel .lumi-voice-dot{animation:lumi-voice-pulse .8s ease-in-out infinite alternate}
-.lumi-voice[data-phase=thinking] .lumi-voice-panel .lumi-voice-dot{background:var(--lumiverse-warning,#d97706)}
-.lumi-voice[data-phase=asking] .lumi-voice-panel .lumi-voice-dot,.lumi-voice[data-phase=confirming] .lumi-voice-panel .lumi-voice-dot{background:var(--lumiverse-success,#16a34a)}
-@keyframes lumi-voice-pulse{to{transform:scale(1.5)}}
-.lumi-voice-x{border:0;background:none;color:var(--lumiverse-text-muted,#aaa);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px}
-.lumi-voice-heard{color:var(--lumiverse-text-muted,#aaa);font-style:italic;margin:2px 0;overflow-wrap:anywhere}
-.lumi-voice-said{margin:4px 0;overflow-wrap:anywhere;white-space:pre-wrap}
-.lumi-voice-options{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
-.lumi-voice-options button{padding:4px 10px;border-radius:8px;border:1px solid var(--lumiverse-primary-050,#8b5cf680);background:var(--lumiverse-primary-015,#8b5cf626);color:inherit;cursor:pointer;font:inherit}
-.lumi-voice-type{width:100%;margin-top:6px;padding:5px 8px;border-radius:8px;border:1px solid var(--lumiverse-border-light,#ffffff22);background:var(--lumiverse-input-bg,#0003);color:inherit;font:inherit}
+.hey-lumi{position:fixed;right:16px;bottom:96px;z-index:100000;font:13px/1.4 var(--lumiverse-font-family,system-ui,sans-serif);color:var(--lumiverse-text,#eee)}
+.hey-lumi *{box-sizing:border-box}
+.hey-lumi-pill{display:flex;align-items:center;gap:6px;margin-left:auto;padding:6px 10px;border-radius:999px;border:1px solid var(--lumiverse-border-light,#ffffff22);background:var(--lumiverse-bg-elevated,#222);color:inherit;cursor:pointer;font:inherit;box-shadow:0 2px 10px #0004}
+.hey-lumi-dot{width:9px;height:9px;border-radius:50%;background:var(--lumiverse-text-dim,#888)}
+.hey-lumi[data-mic=listening] .hey-lumi-dot{background:var(--lumiverse-primary,#8b5cf6)}
+.hey-lumi[data-mic=paused] .hey-lumi-dot{background:var(--lumiverse-warning,#d97706)}
+.hey-lumi[data-mic=error] .hey-lumi-dot{background:var(--lumiverse-danger,#dc2626)}
+.hey-lumi[data-mic=starting] .hey-lumi-dot{opacity:.5}
+.hey-lumi-panel{width:300px;padding:10px 12px;border-radius:14px;border:1px solid var(--lumiverse-border-light,#ffffff22);background:var(--lumiverse-bg-elevated,#222);box-shadow:0 6px 24px #0006}
+.hey-lumi-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.hey-lumi-head b{flex:1;font-weight:600}
+.hey-lumi[data-phase=listening] .hey-lumi-panel .hey-lumi-dot{background:var(--lumiverse-primary,#8b5cf6)}
+.hey-lumi[data-hearing=true] .hey-lumi-panel .hey-lumi-dot{animation:hey-lumi-pulse .8s ease-in-out infinite alternate}
+.hey-lumi[data-phase=thinking] .hey-lumi-panel .hey-lumi-dot{background:var(--lumiverse-warning,#d97706)}
+.hey-lumi[data-phase=asking] .hey-lumi-panel .hey-lumi-dot,.hey-lumi[data-phase=confirming] .hey-lumi-panel .hey-lumi-dot{background:var(--lumiverse-success,#16a34a)}
+@keyframes hey-lumi-pulse{to{transform:scale(1.5)}}
+.hey-lumi-x{border:0;background:none;color:var(--lumiverse-text-muted,#aaa);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px}
+.hey-lumi-heard{color:var(--lumiverse-text-muted,#aaa);font-style:italic;margin:2px 0;overflow-wrap:anywhere}
+.hey-lumi-said{margin:4px 0;overflow-wrap:anywhere;white-space:pre-wrap}
+.hey-lumi-options{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.hey-lumi-options button{padding:4px 10px;border-radius:8px;border:1px solid var(--lumiverse-primary-050,#8b5cf680);background:var(--lumiverse-primary-015,#8b5cf626);color:inherit;cursor:pointer;font:inherit}
+.hey-lumi-type{width:100%;margin-top:6px;padding:5px 8px;border-radius:8px;border:1px solid var(--lumiverse-border-light,#ffffff22);background:var(--lumiverse-input-bg,#0003);color:inherit;font:inherit}
 `;
 
 const PHASE_TEXT: Record<SessionView["phase"], string> = {
@@ -50,39 +50,39 @@ export function createBubble(handlers: BubbleHandlers) {
   const style = document.createElement("style");
   style.textContent = CSS;
   const root = document.createElement("div");
-  root.className = "lumi-voice";
-  root.setAttribute("data-lumi-voice", "");
+  root.className = "hey-lumi";
+  root.setAttribute("data-hey-lumi", "");
   root.append(style);
 
   const pill = document.createElement("button");
   pill.type = "button";
-  pill.className = "lumi-voice-pill";
-  pill.innerHTML = '<span class="lumi-voice-dot"></span><span>Lumi</span>';
+  pill.className = "hey-lumi-pill";
+  pill.innerHTML = '<span class="hey-lumi-dot"></span><span>Lumi</span>';
   pill.addEventListener("click", handlers.onPill);
 
   const panel = document.createElement("div");
-  panel.className = "lumi-voice-panel";
+  panel.className = "hey-lumi-panel";
   panel.setAttribute("role", "dialog");
-  panel.setAttribute("aria-label", "Lumi Voice");
+  panel.setAttribute("aria-label", "Hey Lumi!");
   const head = document.createElement("div");
-  head.className = "lumi-voice-head";
+  head.className = "hey-lumi-head";
   const state = document.createElement("b");
   const x = document.createElement("button");
   x.type = "button";
-  x.className = "lumi-voice-x";
+  x.className = "hey-lumi-x";
   x.setAttribute("aria-label", "Close Lumi");
   x.textContent = "×";
   x.addEventListener("click", handlers.onClose);
-  head.append(Object.assign(document.createElement("span"), { className: "lumi-voice-dot" }), state, x);
+  head.append(Object.assign(document.createElement("span"), { className: "hey-lumi-dot" }), state, x);
   const heard = document.createElement("div");
-  heard.className = "lumi-voice-heard";
+  heard.className = "hey-lumi-heard";
   const said = document.createElement("div");
-  said.className = "lumi-voice-said";
+  said.className = "hey-lumi-said";
   said.setAttribute("aria-live", "polite");
   const opts = document.createElement("div");
-  opts.className = "lumi-voice-options";
+  opts.className = "hey-lumi-options";
   const input = document.createElement("input");
-  input.className = "lumi-voice-type";
+  input.className = "hey-lumi-type";
   input.placeholder = "Or type to Lumi...";
   input.addEventListener("keydown", (e) => {
     e.stopPropagation();

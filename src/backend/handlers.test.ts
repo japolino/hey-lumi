@@ -40,10 +40,10 @@ test("entity lists page through characters, cache, and skip kinds without permis
 
 test("rpc errors keep their code", async () => {
   const { handlers } = setup();
-  const res = await handleRpc(handlers, { type: "lumi_voice:req", id: "1", method: "swipe", params: { chatId: "none", direction: "left" } });
-  expect(res).toEqual({ type: "lumi_voice:res", id: "1", ok: true, result: { ok: false, say: "There is no reply to swipe." } });
+  const res = await handleRpc(handlers, { type: "hey_lumi:req", id: "1", method: "swipe", params: { chatId: "none", direction: "left" } });
+  expect(res).toEqual({ type: "hey_lumi:res", id: "1", ok: true, result: { ok: false, say: "There is no reply to swipe." } });
   expect(errorResponse("2", new Error("PERMISSION_DENIED: decisions"))).toMatchObject({ ok: false, error: { code: "PERMISSION_DENIED" } });
-  expect(errorResponse("3", new Error("boom"))).toMatchObject({ error: { code: "LUMI_VOICE_ERROR" } });
+  expect(errorResponse("3", new Error("boom"))).toMatchObject({ error: { code: "HEY_LUMI_ERROR" } });
 });
 
 test("characters of recent chats come first, newest first, then host order", () => {

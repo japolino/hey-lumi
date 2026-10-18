@@ -1,4 +1,4 @@
-# Lumi Voice: design decisions (from the user conversation, 2026-10-18)
+# Hey Lumi!: design decisions (from the user conversation, 2026-10-18)
 
 Lumiverse extension (Spindle). Working name "Lumi Voice", identifier `lumi_voice` (assumption, not confirmed).
 

@@ -1,5 +1,5 @@
 /**
- * Lumi Voice backend: answers frontend RPC requests (router, dictation, rewrite, profile lists, fallbacks).
+ * Hey Lumi! backend: answers frontend RPC requests (router, dictation, rewrite, profile lists, fallbacks).
  */
 import { createEntityLists } from "./backend/entities";
 import { createHandlers, handleRpc, isRpcRequest } from "./backend/handlers";
@@ -13,7 +13,7 @@ const handlers = createHandlers(spindle, entities);
 spindle.onFrontendMessage(async (payload, userId, frontendSessionId) => {
   if (!isRpcRequest(payload)) return;
   const response = await handleRpc(handlers, payload, userId);
-  if (!response.ok) spindle.log.warn(`[lumi_voice] ${payload.method} failed: ${response.error.message}`);
+  if (!response.ok) spindle.log.warn(`[hey_lumi] ${payload.method} failed: ${response.error.message}`);
   spindle.sendToFrontend(response, userId, frontendSessionId ? { frontendSessionId } : undefined);
 });
 

@@ -1,4 +1,4 @@
-# Lumi Voice v0: build report
+# Hey Lumi! v0: build report
 
 Date: 2026-10-18. Repo: `C:/Users/eme4/lumi-voice`, branch `master` (worker branches
 `wt/audio`, `wt/dictation`, `wt/router` are merged). Host for live tests: Lumiverse `origin/staging` @ `2a8d9461`
@@ -11,11 +11,13 @@ against real Jev/LLM outside Lumiverse. **[code]** = written, not run.
 
 ## What it is
 
-- `spindle.json`: identifier `lumi_voice`; permissions `media, decisions, generation, chats, characters, personas,
+- Renamed to **Hey Lumi!** (identifier `hey_lumi`, package `hey-lumi`, repo `japolino/hey-lumi`); the assistant is still
+  called Lumi and the wake word is still "hey lumi". Older sections below say "Lumi Voice".
+- `spindle.json`: identifier `hey_lumi`; permissions `media, decisions, generation, chats, characters, personas,
   presets, images, chat_mutation` (`ui_panels` dropped: the bubble is own DOM). Entries `dist/backend.js` (52.5 KB) + `dist/frontend.js` (53.0 KB).
 - Backend bundle passes the real install scanner (`detectDangerousBackendCapabilities` → `[]`, `scripts/scan.ts`) and has
   no `lumiverse-spindle-types` runtime code.
-- `bun test src`: 108 pass, 0 fail. `tsc --noEmit`: clean.
+- `bun test src`: 112 pass, 0 fail. `tsc --noEmit`: clean.
 
 ### Layout
 | Area | Files | Owner |
@@ -90,6 +92,24 @@ Worker numbers (details in their commits):
 - Jev images (character portraits) are sent only when `decision-images-v1`, the `images` permission and a 280-1568 px
   `image_id` are all there; the scratch characters had no avatars, so this path is **[eval]** only.
 - Not built (per spec): sherpa KWS/VAD wasm, screenshot + Jev box, multi-language, mobile tuning.
+
+## Wake word v1: on-device sherpa-onnx KWS (wired)
+
+- Files from the sibling build (`src/frontend/audio/kws/`, report `spec/kws-wasm.md`) are adopted. Assets come from
+  jsDelivr `japolino/hey-lumi-assets@be9dce4d1ccab77f328627b6e2e15d0dec38cc12/kws/`; all 7 manifest sha256 values equal
+  `C:/Users/eme4/hey-lumi-assets/kws/SHA256SUMS` **[ran]**. Cache Storage name `hey-lumi-kws-1.13.8-lumi1`.
+- `src/frontend/audio/wake-select.ts`: KWS is the default. The Whistle text match listens while KWS downloads and starts,
+  then hands over; if WebAssembly is missing or the download/start fails, the text match stays **[unit]**.
+  The settings panel shows one line: which detector runs, and the download progress on first use **[live]**.
+- A KWS hit opens the bubble while "Hey Lumi, open my themes" is still being spoken. The session treats the speech burst
+  that started before it opened as the wake burst: "hey lumi" is stripped and an empty rest does not close the session **[unit]**.
+- **[live]** (scratch staging, fake mic, fresh browser profile): cold download of all 7 files from jsDelivr (all 200),
+  KWS ready 1.5-7.5 s after the mic started; then "Hey Lumi, open my themes" (30 s into the clip) opened the bubble about
+  1 s after the speech began (KWS), the Theme drawer opened at ~4 s after, the dictation was formatted into the draft and
+  "That's about it, I don't need anything else" closed the session. With jsDelivr blocked, the panel said
+  "Wake word: speech-to-text match (on-device detector unavailable: Failed to fetch)" and the same clip still worked via the text match.
+- Not adopted: the KWS module's Silero VAD for speech bursts. The current burst cutter is verified live and I have no
+  burst-level eval that shows the VAD is better; switching would also split code paths between the two detectors.
 
 ## Decisions taken after the first report (parent, 2026-10-18)
 

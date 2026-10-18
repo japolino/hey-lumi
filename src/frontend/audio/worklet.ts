@@ -1,6 +1,6 @@
 import { PcmResampler } from "./resampler";
 
-export const WORKLET_NAME = "lumi-voice-capture";
+export const WORKLET_NAME = "hey-lumi-capture";
 /** 50 ms at 16 kHz. */
 export const FRAME_SAMPLES = 800;
 

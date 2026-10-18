@@ -31,7 +31,7 @@ export function parseSurfaceActionId(actionId: string): { kind: string; id: stri
 /**
  * Router candidates: invocable host surfaces without params (minus duplicates) plus Lumi's own actions.
  * `fallbackSettings` (from the backend's spindle.ui.getSettingsTabs) fills in settings tabs when the catalog has none.
- * `ownOwner` is Lumi Voice's own owner id in the catalog; its surfaces are left out.
+ * `ownOwner` is Hey Lumi!'s own owner id in the catalog; its surfaces are left out.
  */
 export function buildCandidates(surfaces: HostSurfaceInfo[], fallbackSettings: HostSurfaceInfo[] = [], ownOwner?: string): ActionCandidate[] {
   if (!surfaces.some((s) => s.kind === "settings_tab")) surfaces = [...surfaces, ...fallbackSettings];

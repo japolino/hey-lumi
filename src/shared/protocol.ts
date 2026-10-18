@@ -1,5 +1,5 @@
 /**
- * Contract between the Lumi Voice frontend (mic, bubble, action execution) and backend (Jev, LLM, embeddings,
+ * Contract between the Hey Lumi! frontend (mic, bubble, action execution) and backend (Jev, LLM, embeddings,
  * entity lists). Plain JSON only: everything here crosses `ctx.sendToBackend` / `spindle.sendToFrontend`.
  */
 
@@ -21,7 +21,7 @@ export interface EntityOption {
 /**
  * One thing Lumi can do, offered to the router. Ids:
  * - `surface:<kind>:<id>`: a host surface from `ctx.host.surfaces.list()`, run with `invoke({kind, id})`.
- * - `lumi:<name>`: an action Lumi Voice implements itself (see `LUMI_ACTIONS`).
+ * - `lumi:<name>`: an action Hey Lumi! implements itself (see `LUMI_ACTIONS`).
  */
 export interface ActionCandidate {
   id: string;
@@ -34,7 +34,7 @@ export interface ActionCandidate {
   destructive?: boolean;
 }
 
-/** Lumi Voice's own actions. The frontend offers only those it can run right now. */
+/** Hey Lumi!'s own actions. The frontend offers only those it can run right now. */
 export const LUMI_ACTIONS = {
   "lumi:character_open": { label: "Open character", description: "Open a character's profile page", arg: "character" },
   "lumi:character_chat_latest": { label: "Chat with character", description: "Open the most recent chat with a character", arg: "character" },
@@ -239,12 +239,12 @@ export interface BackendMethods {
 export type BackendMethod = keyof BackendMethods;
 
 export interface RpcRequest<M extends BackendMethod = BackendMethod> {
-  type: "lumi_voice:req";
+  type: "hey_lumi:req";
   id: string;
   method: M;
   params: Parameters<BackendMethods[M]>[0];
 }
 
 export type RpcResponse<M extends BackendMethod = BackendMethod> =
-  | { type: "lumi_voice:res"; id: string; ok: true; result: ReturnType<BackendMethods[M]> }
-  | { type: "lumi_voice:res"; id: string; ok: false; error: { code: string; message: string } };
+  | { type: "hey_lumi:res"; id: string; ok: true; result: ReturnType<BackendMethods[M]> }
+  | { type: "hey_lumi:res"; id: string; ok: false; error: { code: string; message: string } };

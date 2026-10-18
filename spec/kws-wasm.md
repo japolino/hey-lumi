@@ -1,4 +1,4 @@
-# Lumi Voice: sherpa-onnx KWS + Silero VAD in the browser (v1 groundwork)
+# Hey Lumi!: sherpa-onnx KWS + Silero VAD in the browser (v1 groundwork)
 
 Date: 2026-10-18. Test machine: AMD Ryzen 3 3300X (4 cores / 8 threads), Windows 11, Chrome 153.0.8010.48 (headless, Playwright).
 Tags: **[ran]** = I ran it and measured. **[code]** = I only read code. **[web]** = docs or memory, not checked here.

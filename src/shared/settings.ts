@@ -1,7 +1,7 @@
 import type { DictationFormat, RouterSettings } from "./protocol";
 
-/** Lumi Voice settings, stored with `ctx.settings` under SETTINGS_KEY. The frontend owns them and sends what the backend needs. */
-export interface LumiVoiceSettings {
+/** Hey Lumi! settings, stored with `ctx.settings` under SETTINGS_KEY. The frontend owns them and sends what the backend needs. */
+export interface HeyLumiSettings {
   /** Listen for "Hey Lumi" while no session is open. */
   wakeWord: boolean;
   /** Close the session after this many seconds without speech. */
@@ -22,7 +22,7 @@ export interface LumiVoiceSettings {
 /** ctx.settings keys must be "<module>:<key>". */
 export const SETTINGS_KEY = "voice:settings";
 
-export const DEFAULT_SETTINGS: LumiVoiceSettings = {
+export const DEFAULT_SETTINGS: HeyLumiSettings = {
   wakeWord: true,
   idleTimeoutSec: 20,
   profiles: { stt: "", decision: "", llm: "", embedding: "", tts: "" },
@@ -31,7 +31,7 @@ export const DEFAULT_SETTINGS: LumiVoiceSettings = {
 };
 
 /** Fill missing or wrong-typed fields from the defaults. */
-export function normalizeSettings(raw: unknown): LumiVoiceSettings {
+export function normalizeSettings(raw: unknown): HeyLumiSettings {
   const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, any>;
   const p = (r.profiles && typeof r.profiles === "object" ? r.profiles : {}) as Record<string, unknown>;
   const f = (r.format && typeof r.format === "object" ? r.format : {}) as Record<string, unknown>;
@@ -52,6 +52,6 @@ export function normalizeSettings(raw: unknown): LumiVoiceSettings {
   };
 }
 
-export function routerSettings(s: LumiVoiceSettings): RouterSettings {
+export function routerSettings(s: HeyLumiSettings): RouterSettings {
   return { decisionProfile: s.profiles.decision, llmProfile: s.profiles.llm, embeddingProfile: s.profiles.embedding };
 }

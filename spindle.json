@@ -1,10 +1,10 @@
 {
   "version": "0.1.0",
-  "name": "Lumi Voice",
-  "identifier": "lumi_voice",
+  "name": "Hey Lumi!",
+  "identifier": "hey_lumi",
   "author": "japolino",
-  "github": "https://github.com/japolino/lumi-voice",
-  "homepage": "https://github.com/japolino/lumi-voice",
+  "github": "https://github.com/japolino/hey-lumi",
+  "homepage": "https://github.com/japolino/hey-lumi",
   "description": "Voice control for Lumiverse (\"Hey Lumi\") and smart roleplay dictation.",
   "permissions": [
     "media",

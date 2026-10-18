@@ -16,7 +16,7 @@ function listeners<T>() {
         try {
           fn(value);
         } catch (error) {
-          console.error("[lumi-voice] audio listener failed", error);
+          console.error("[hey-lumi] audio listener failed", error);
         }
       }
     },

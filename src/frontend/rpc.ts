@@ -21,7 +21,7 @@ export function createRpc(ctx: Pick<FrontendCtx, "sendToBackend" | "onBackendMes
   let next = 0;
   const off = ctx.onBackendMessage((payload) => {
     const res = payload as RpcResponse | null;
-    if (!res || res.type !== "lumi_voice:res") return;
+    if (!res || res.type !== "hey_lumi:res") return;
     const entry = pending.get(res.id);
     if (!entry) return;
     pending.delete(res.id);
@@ -34,10 +34,10 @@ export function createRpc(ctx: Pick<FrontendCtx, "sendToBackend" | "onBackendMes
       const id = `${Date.now().toString(36)}-${++next}`;
       const timer = setTimeout(() => {
         pending.delete(id);
-        reject(new RpcError("TIMEOUT", `Lumi Voice backend did not answer (${method}).`));
+        reject(new RpcError("TIMEOUT", `Hey Lumi! backend did not answer (${method}).`));
       }, TIMEOUT_MS);
       pending.set(id, { resolve, reject, timer });
-      const req: RpcRequest = { type: "lumi_voice:req", id, method, params } as RpcRequest;
+      const req: RpcRequest = { type: "hey_lumi:req", id, method, params } as RpcRequest;
       ctx.sendToBackend(req);
     });
   return {
@@ -46,7 +46,7 @@ export function createRpc(ctx: Pick<FrontendCtx, "sendToBackend" | "onBackendMes
       off();
       for (const [, entry] of pending) {
         clearTimeout(entry.timer);
-        entry.reject(new RpcError("DISPOSED", "Lumi Voice stopped."));
+        entry.reject(new RpcError("DISPOSED", "Hey Lumi! stopped."));
       }
       pending.clear();
     },
