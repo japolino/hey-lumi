@@ -130,8 +130,15 @@ Keep the local branch tracking `fork/hey-lumi-all` (or `fork/staging`): the runn
 upstream (git-ops.ts `getUpstreamRefForSync`) and refuses if there are local commits. A local `staging` that tracks
 `origin/staging` would be reset to upstream on Update and lose these changes.
 
-Extension: for voice theme changes Hey Lumi! needs `app_manipulation` in `spindle.json` (or a manual grant), and for
-`spindle.embeddings` it needs the `embeddings` permission; neither is in its manifest today.
+Extension (Hey Lumi!, japolino/hey-lumi):
+- `main` requests `app_manipulation` (voice theme changes, #476). It does not request `embeddings`: a Lumiverse without
+  #472 refuses to enable it ("Invalid permission: embeddings", checked on a clean staging 2a8d9461 instance). Since
+  c806e3d `main` also skips `spindle.embeddings` when the permission is not granted, so it works on both hosts.
+- Branch `hey-lumi-all` = `main` + `embeddings` in `spindle.json`. On this fork install or switch Hey Lumi! to that
+  branch (Extensions -> branch). Checked live on the fork: `embeddings` is auto-granted, the settings panel lists the
+  embedding connection, and a command embeds the utterance and the candidates.
+- Refresh: when `main` moves, `git merge main` into `hey-lumi-all` (no rebase, it is pushed). When #472 is merged
+  upstream, add `embeddings` to `main` and delete the branch.
 
 ## How to refresh
 
