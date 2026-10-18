@@ -62,7 +62,7 @@ describe("routeUtterance", () => {
     expect(await routeUtterance(request("the second one", { pending }), picked.services)).toMatchObject({
       kind: "run",
       steps: [pending.options[1]!.step],
-      say: "Opening Seo-ah",
+      say: "Opening the profile of Seo-ah",
     });
     const other = fakeServices({ answers: { pending: pick({ "none of these": 0.95 }), intent: command, action: pick({ Theme: 0.9 }) } });
     expect(await routeUtterance(request("open my themes instead", { pending }), other.services)).toMatchObject({

@@ -797,8 +797,8 @@ var ARG_NOUN = {
   chat: "recent chat"
 };
 var LUMI_KEYWORDS = {
-  "lumi:character_open": "open, show, profile, card, page",
-  "lumi:character_chat_latest": "chat with, talk to, go back to, continue the chat with",
+  "lumi:character_open": "profile, details, about, creator notes, info page",
+  "lumi:character_chat_latest": "open, show, card, go to, chat with, talk to, go back to, continue the chat with",
   "lumi:character_chat_new": "new chat, fresh chat, start a chat, start over with",
   "lumi:chat_open": "open chat, recent chat, go to the chat, that chat",
   "lumi:persona_switch": "persona, be, play as, I am, switch me to",
@@ -959,7 +959,7 @@ var THRESHOLDS = {
 };
 var DESTRUCTIVE = new Set(["surface:command:action-delete-last-message", "surface:command:action-delete-chat", "lumi:draft_clear"]);
 var PHRASES = {
-  "lumi:character_open": ["Opening", "open"],
+  "lumi:character_open": ["Opening the profile of", "the profile of"],
   "lumi:character_chat_latest": ["Opening your chat with", "your chat with"],
   "lumi:character_chat_new": ["Starting a new chat with", "a new chat with"],
   "lumi:chat_open": ["Opening", "the chat"],

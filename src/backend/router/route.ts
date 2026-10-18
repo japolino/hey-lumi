@@ -29,7 +29,7 @@ const DESTRUCTIVE = new Set(["surface:command:action-delete-last-message", "surf
 
 /** [what Lumi says while doing it, how a follow-up question names it] for actions that take an entity. */
 const PHRASES: Record<string, [string, string]> = {
-  "lumi:character_open": ["Opening", "open"],
+  "lumi:character_open": ["Opening the profile of", "the profile of"],
   "lumi:character_chat_latest": ["Opening your chat with", "your chat with"],
   "lumi:character_chat_new": ["Starting a new chat with", "a new chat with"],
   "lumi:chat_open": ["Opening", "the chat"],

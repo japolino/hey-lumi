@@ -25,8 +25,8 @@ const ARG_NOUN: Record<ArgKind, string> = {
 
 /** Extra matching words for Lumi's own actions (LUMI_ACTIONS has none). */
 const LUMI_KEYWORDS: Record<string, string> = {
-  "lumi:character_open": "open, show, profile, card, page",
-  "lumi:character_chat_latest": "chat with, talk to, go back to, continue the chat with",
+  "lumi:character_open": "profile, details, about, creator notes, info page",
+  "lumi:character_chat_latest": "open, show, card, go to, chat with, talk to, go back to, continue the chat with",
   "lumi:character_chat_new": "new chat, fresh chat, start a chat, start over with",
   "lumi:chat_open": "open chat, recent chat, go to the chat, that chat",
   "lumi:persona_switch": "persona, be, play as, I am, switch me to",
