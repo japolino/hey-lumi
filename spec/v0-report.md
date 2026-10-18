@@ -12,10 +12,10 @@ against real Jev/LLM outside Lumiverse. **[code]** = written, not run.
 ## What it is
 
 - `spindle.json`: identifier `lumi_voice`; permissions `media, decisions, generation, chats, characters, personas,
-  presets, images, chat_mutation, ui_panels`. Entries `dist/backend.js` (51.8 KB) + `dist/frontend.js` (51.7 KB).
+  presets, images, chat_mutation` (`ui_panels` dropped: the bubble is own DOM). Entries `dist/backend.js` (52.5 KB) + `dist/frontend.js` (53.0 KB).
 - Backend bundle passes the real install scanner (`detectDangerousBackendCapabilities` → `[]`, `scripts/scan.ts`) and has
   no `lumiverse-spindle-types` runtime code.
-- `bun test src`: 105 pass, 0 fail. `tsc --noEmit`: clean.
+- `bun test src`: 108 pass, 0 fail. `tsc --noEmit`: clean.
 
 ### Layout
 | Area | Files | Owner |
@@ -47,14 +47,17 @@ against real Jev/LLM outside Lumiverse. **[code]** = written, not run.
 | "Claude Sonnet please, switch the connection" → `ctx.connections.setActiveAcknowledged` | **[live]** | `activeProfileId` = Claude Sonnet ("switch to claw" asked "Did you mean Claude Sonnet?") |
 | "regenerate that" → `action-regenerate` | **[live]** | new swipe created |
 | "apply the emerald theme" → **degraded**: "Applying themes by voice needs a newer Lumiverse." | **[live]** | |
-| "stop" → asked "Stop generation or Lumi Voice?" (idle chat) | **[live]** | acceptable; see open questions |
+| "stop" while idle → closes the session; while a reply streams → stop generation | idle **[live]**, streaming **[unit]** | Lumi Voice's own drawer tab / input-bar action are no longer candidates (filtered by the catalog `owner` of our own entries) |
+| "stop listening" → mic off; "close Lumi" → close | **[live]** / **[eval]** | new Lumi actions `lumi:stop_listening`, `lumi:close` |
+| "Thanks, Lumi, but..." right after "Opening Theme" → close | **[live]** + **[eval]** | close option lists thank-you/bye examples; state has `lumi_last_said` (the bubble's line) |
 | Escape closes; X closes; idle timeout closes; "hey lumi" again closes | Escape **[live]**, rest **[unit]** | |
 | Composer without `ctx.composer`: native value setter + `input` event on `textarea[name="chat-message"]` updates React state; send by clicking the button next to it | **[live]** | the sent message had the injected text |
 | Settings drawer tab (listening on/off, wake word, idle timeout, profile per kind, dictation format, host support list) | **[code]** + loads **[live]** | not clicked through |
 | `ctx.settings` keys must be `module:key` (`voice:settings`) | **[live]** (a plain `settings` key throws `SETTING_KEY_INVALID`) | |
 
 Worker numbers (details in their commits):
-- Router **[eval]** real Jev: dev 49/49, held-out 40/40 (39/40 before one fix), p50 263-300 ms; planner only for multi-step
+- Router **[eval]** real Jev, re-run after the decisions below: dev 54/54 in 2 of 3 runs ("go home" flaked once to
+  ignore: intent not_for_lumi 0.29 / action Home 0.46), held-out 40/40, p50 ~280 ms. First run: dev 49/49, held-out 40/40 (39/40 before one fix); planner only for multi-step
   (2/2 correct, ~1.2-1.5 s); DOM pick 8/8, p50 ~230 ms; portraits 5/8 (all 3 misses: target not among the 8 sent).
 - Dictation **[eval]**: request bodies byte-identical to the bench; real Jev held-out punctuated 100.0% word labels
   (bench 100.0%), hard 97.1% (bench 97.1%), unpunctuated with LLM pass 98.8% (bench 98.8%); p50 0.23-0.25 s (1.2-1.4 s with the LLM pass).
@@ -88,12 +91,23 @@ Worker numbers (details in their commits):
   `image_id` are all there; the scratch characters had no avatars, so this path is **[eval]** only.
 - Not built (per spec): sherpa KWS/VAD wasm, screenshot + Jev box, multi-language, mobile tuning.
 
-## Open questions
+## Decisions taken after the first report (parent, 2026-10-18)
+
+1. Jev model: the Decision profile's model is used as is. The settings panel shows a one-line hint when that model is
+   not jev-preview / 1.14 **[code]**.
+2. Own surfaces dropped from the candidates; new Lumi actions `stop listening` and `close`; "stop" = stop generation while
+   a reply streams, else close **[live]**.
+3. Characters are ordered recent-first by the characters of recent chats (`RouteContext.recentCharacterIds` from
+   `ctx.chats.listRecent`), then host order; narrowing ties and portrait picks keep this order **[unit]**.
+4. Bubble stays own DOM above modals; `ui_panels` removed from the manifest **[live]** (re-imported, permissions re-granted).
+5. Close stays with Jev: richer close examples + `lumi_last_said` in state **[eval]** + **[live]**.
+
+## Open questions (first report; 1-5 answered above)
 
 1. **Jev model**: router and dictation were tuned on `jev-preview` (1.14). A Decision profile on `jev-latest` (1.13) is
    a bit worse (dictation bench) and the Jev gap fallback is better on 1.13. Should Lumi Voice pass `model: 'jev-preview'`
    per request (the API allows it), or keep the profile's model?
-2. "stop" while idle asks "Stop generation or Lumi Voice?" because our own drawer tab/input-bar action are candidates.
+2. (answered) "stop" while idle asks "Stop generation or Lumi Voice?" because our own drawer tab/input-bar action are candidates.
    Drop our own surfaces from the candidates (and add a "stop listening" Lumi action instead)?
 3. Character order for portrait options: the backend lists characters in host order; recent-first would help looks-based
    picks (router open issue 1). A host `characters.list({sort:'recent'})` or using recent chats first?

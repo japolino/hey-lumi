@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { createEntityLists } from "./entities";
-import { createHandlers, errorResponse, handleRpc } from "./handlers";
+import { createHandlers, errorResponse, handleRpc, recentFirst } from "./handlers";
 import { createFakeHost } from "./testing/fake-host";
 
 function setup() {
@@ -44,4 +44,9 @@ test("rpc errors keep their code", async () => {
   expect(res).toEqual({ type: "lumi_voice:res", id: "1", ok: true, result: { ok: false, say: "There is no reply to swipe." } });
   expect(errorResponse("2", new Error("PERMISSION_DENIED: decisions"))).toMatchObject({ ok: false, error: { code: "PERMISSION_DENIED" } });
   expect(errorResponse("3", new Error("boom"))).toMatchObject({ error: { code: "LUMI_VOICE_ERROR" } });
+});
+
+test("characters of recent chats come first, newest first, then host order", () => {
+  const items = ["a", "b", "c", "d"].map((id) => ({ id, name: id }));
+  expect(recentFirst(items, ["c", "a"]).map((e) => e.id)).toEqual(["c", "a", "b", "d"]);
 });

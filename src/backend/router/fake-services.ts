@@ -75,7 +75,7 @@ export const testEntities = {
 export function request(utterance: string, extra: Partial<RouteRequest> = {}): RouteRequest {
   return {
     utterance,
-    context: { route: "/", chatOpen: false, generating: false, draft: "", history: [] },
+    context: { route: "/", chatOpen: false, generating: false, draft: "", history: [], lumiSaid: "", recentCharacterIds: [] },
     candidates: [...surfaceCandidates, ...lumiCandidates],
     entities: testEntities,
     settings: { decisionProfile: "", llmProfile: "", embeddingProfile: "" },

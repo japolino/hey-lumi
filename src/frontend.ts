@@ -25,17 +25,19 @@ export function setup(rawCtx: unknown) {
 
   let surfaces: HostSurfaceInfo[] = ctx.host.surfaces?.list() ?? [];
   let fallbackSettings: HostSurfaceInfo[] = [];
+  let ready = false;
   let candidates = buildCandidates(surfaces);
+  const refreshCandidates = () => void (candidates = buildCandidates(surfaces, fallbackSettings, ownOwner()));
   const offSurfaces = ctx.host.surfaces?.subscribe((next) => {
     surfaces = next;
-    candidates = buildCandidates(next, fallbackSettings);
+    refreshCandidates();
     entities.invalidate();
   });
   if (!surfaces.some((s) => s.kind === "settings_tab")) {
     rpc.call("settingsTabs", {}).then(
       (tabs) => {
         fallbackSettings = tabs.map((t) => ({ kind: "settings_tab", ...t }));
-        candidates = buildCandidates(surfaces, fallbackSettings);
+        refreshCandidates();
       },
       () => {},
     );
@@ -90,6 +92,7 @@ export function setup(rawCtx: unknown) {
     surfaces: () => surfaces,
     candidates: () => candidates,
     entities: () => entities.get(),
+    stopListening: () => stopListening(),
     generating,
     ...(speak ? { speak } : {}),
     bubbleElement: () => bubble.element,
@@ -189,6 +192,13 @@ export function setup(rawCtx: unknown) {
 
   const action = ctx.ui.registerInputBarAction({ id: "lumi_voice_toggle", label: "Lumi Voice", subtitle: "Start or stop listening", iconSvg: MIC_ICON });
   cleanups.push(action.onClick(toggleListening), () => action.destroy());
+  /** The catalog's owner id for Lumi Voice's own entries (the host uses its extension id). */
+  function ownOwner(): string | undefined {
+    if (!ready) return undefined;
+    return surfaces.find((s) => (s.kind === "drawer_tab" && s.id === tab.tabId) || (s.kind === "input_bar_action" && s.id === action.actionId))?.owner;
+  }
+  ready = true;
+  refreshCandidates();
 
   void (async () => {
     settings = normalizeSettings(await ctx.settings?.get(SETTINGS_KEY));

@@ -31,9 +31,12 @@ export function parseSurfaceActionId(actionId: string): { kind: string; id: stri
 /**
  * Router candidates: invocable host surfaces without params (minus duplicates) plus Lumi's own actions.
  * `fallbackSettings` (from the backend's spindle.ui.getSettingsTabs) fills in settings tabs when the catalog has none.
+ * `ownOwner` is Lumi Voice's own owner id in the catalog; its surfaces are left out.
  */
-export function buildCandidates(surfaces: HostSurfaceInfo[], fallbackSettings: HostSurfaceInfo[] = []): ActionCandidate[] {
+export function buildCandidates(surfaces: HostSurfaceInfo[], fallbackSettings: HostSurfaceInfo[] = [], ownOwner?: string): ActionCandidate[] {
   if (!surfaces.some((s) => s.kind === "settings_tab")) surfaces = [...surfaces, ...fallbackSettings];
+  // Lumi's own drawer tab and input-bar action are not voice targets ("stop listening" / "close" are Lumi actions).
+  if (ownOwner) surfaces = surfaces.filter((s) => s.owner !== ownOwner);
   const drawerIds = new Set(surfaces.filter((s) => s.kind === "drawer_tab").map((s) => s.id));
   const settingsIds = new Set(surfaces.filter((s) => s.kind === "settings_tab").map((s) => s.id));
   const out: ActionCandidate[] = [];
@@ -75,10 +78,13 @@ export async function llmProfileOptions(ctx: FrontendCtx): Promise<EntityOption[
   return (Array.isArray(rows) ? rows : []).map((p) => ({ id: p.id, name: p.name, detail: [p.provider, p.model].filter(Boolean).join(" ") || undefined }));
 }
 
-export async function recentChatOptions(ctx: FrontendCtx): Promise<EntityOption[]> {
+async function recentChats(ctx: FrontendCtx) {
   if (!ctx.chats.listRecent) return [];
-  const page = await ctx.chats.listRecent({ limit: 30, sort: "recent", direction: "desc" });
-  return page.data.map((c) => ({
+  return (await ctx.chats.listRecent({ limit: 30, sort: "recent", direction: "desc" })).data;
+}
+
+export function recentChatOptions(rows: Awaited<ReturnType<typeof recentChats>>): EntityOption[] {
+  return rows.map((c) => ({
     id: c.id,
     name: c.name || c.character_name,
     detail: [c.character_name, c.last_message_preview?.slice(0, 80)].filter(Boolean).join(": "),
@@ -86,14 +92,23 @@ export async function recentChatOptions(ctx: FrontendCtx): Promise<EntityOption[
   }));
 }
 
+export interface FrontendEntities {
+  lists: Partial<Record<ArgKind, EntityOption[]>>;
+  /** Characters of the recent chats, newest first, without repeats. */
+  recentCharacterIds: string[];
+}
+
 /** Frontend-owned entity lists for the router. Cached briefly: one utterance should not cost three REST calls. */
 export function createFrontendEntities(ctx: FrontendCtx, surfaces: () => HostSurfaceInfo[]) {
-  let cached: { at: number; value: Partial<Record<ArgKind, EntityOption[]>> } | null = null;
+  let cached: { at: number; value: FrontendEntities } | null = null;
   return {
-    async get(): Promise<Partial<Record<ArgKind, EntityOption[]>>> {
+    async get(): Promise<FrontendEntities> {
       if (cached && Date.now() - cached.at < 20_000) return cached.value;
-      const [llm, chat] = await Promise.all([llmProfileOptions(ctx).catch(() => []), recentChatOptions(ctx).catch(() => [])]);
-      const value = { theme: themeOptions(surfaces()), llm_profile: llm, chat };
+      const [llm, chats] = await Promise.all([llmProfileOptions(ctx).catch(() => []), recentChats(ctx).catch(() => [])]);
+      const value = {
+        lists: { theme: themeOptions(surfaces()), llm_profile: llm, chat: recentChatOptions(chats) },
+        recentCharacterIds: [...new Set(chats.map((c) => c.character_id).filter(Boolean))],
+      };
       cached = { at: Date.now(), value };
       return value;
     },

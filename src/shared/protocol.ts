@@ -46,7 +46,9 @@ export const LUMI_ACTIONS = {
   "lumi:llm_switch": { label: "Switch connection profile", description: "Switch the active LLM connection profile", arg: "llm_profile" },
   "lumi:swipe_left": { label: "Previous swipe", description: "Show the previous swipe of the last reply" },
   "lumi:swipe_right": { label: "Next swipe", description: "Show the next swipe of the last reply, or generate a new one" },
-  "lumi:stop": { label: "Stop generation", description: "Stop the reply that is being generated" },
+  "lumi:stop": { label: "Stop", description: "Stop the reply that is being generated; when nothing is generated, close Lumi" },
+  "lumi:close": { label: "Close Lumi", description: "End the voice session; Lumi waits for \"Hey Lumi\" again" },
+  "lumi:stop_listening": { label: "Stop listening", description: "Turn Lumi's microphone off until it is turned on again" },
   "lumi:draft_send": { label: "Send the draft", description: "Send the message in the chat input" },
   "lumi:draft_rewrite": { label: "Rewrite the draft", description: "Rewrite the message in the chat input with the AI, using recent chat context" },
   "lumi:draft_clear": { label: "Clear the draft", description: "Empty the chat input", destructive: true },
@@ -69,6 +71,10 @@ export interface RouteContext {
   draft: string;
   /** Short history of this session, oldest first: what the user said and what Lumi did. */
   history: Array<{ said: string; did: string }>;
+  /** The bubble's current line (what Lumi last said, e.g. "Opening Theme"). */
+  lumiSaid: string;
+  /** Characters of the most recent chats, newest first (the backend lists these characters first). */
+  recentCharacterIds: string[];
 }
 
 /** A follow-up question the bubble asked; the next utterance answers it. */
@@ -194,6 +200,7 @@ export interface ProfileOption {
   id: string;
   name: string;
   isDefault: boolean;
+  model?: string;
 }
 
 export interface BackendProfiles {

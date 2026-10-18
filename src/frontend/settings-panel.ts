@@ -64,6 +64,12 @@ export function renderSettingsPanel(deps: PanelDeps): () => Promise<void> {
           )
         : row(key === "stt" ? "Speech to text" : key === "tts" ? "Text to speech" : "Embedding", select([["", "Lumiverse default"]], "", () => {}, true), missing);
 
+    const decision = backend.decision.find((p) => (s.profiles.decision ? p.id === s.profiles.decision : p.isDefault));
+    const decisionHint =
+      decision?.model && !/jev-preview|1\.14/i.test(decision.model)
+        ? [el("small", { textContent: `This profile uses ${decision.model}. Lumi Voice is tuned for Jev 1.14 (jev-preview); matching by looks needs it.`, style: "opacity:.75" })]
+        : [];
+
     const listenBtn = el("button", { type: "button", textContent: deps.listening() ? "Stop listening" : "Start listening" });
     listenBtn.addEventListener("click", () => {
       deps.toggleListening();
@@ -86,6 +92,7 @@ export function renderSettingsPanel(deps: PanelDeps): () => Promise<void> {
       el("b", { textContent: "Connection profiles" }),
       profileSelect("stt", stt, "Choosing an STT profile needs a newer Lumiverse; the Voice & Speech setting is used (Whistle if it cannot transcribe audio)."),
       profileSelect("decision", backend.decision, ""),
+      ...decisionHint,
       profileSelect("llm", llm, ""),
       profileSelect("embedding", backend.embedding, "Embeddings for extensions need a newer Lumiverse; names are matched by text only."),
       profileSelect("tts", tts, "Choosing a TTS profile needs a newer Lumiverse."),

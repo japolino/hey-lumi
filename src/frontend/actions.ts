@@ -12,6 +12,8 @@ export interface StepOutcome {
 
 /** Actions on the draft and the screen live in the session (they need its state). */
 export interface SessionActions {
+  close(): Promise<StepOutcome>;
+  stopListening(): Promise<StepOutcome>;
   draftSend(): Promise<StepOutcome>;
   draftRewrite(): Promise<StepOutcome>;
   draftClear(): Promise<StepOutcome>;
@@ -139,13 +141,18 @@ export async function runStep(step: PlanStep, env: ActionEnv): Promise<StepOutco
       return res.ok ? { ok: true } : { ok: false, say: res.say ?? "Could not swipe." };
     }
     case "lumi:stop": {
+      // "Stop" while nothing streams means the user is done with Lumi.
+      if (!env.generating()) return env.session.close();
       if (has(env, "command", "action-stop-generation")) return invoke(env, "command", "action-stop-generation");
-      if (!env.generating()) return { ok: false, say: "Nothing is being generated." };
       const button = findComposerButton();
       if (!button) return { ok: false, say: "I could not find the stop button." };
       button.click();
       return { ok: true };
     }
+    case "lumi:close":
+      return env.session.close();
+    case "lumi:stop_listening":
+      return env.session.stopListening();
     case "lumi:draft_send":
       return env.session.draftSend();
     case "lumi:draft_rewrite":

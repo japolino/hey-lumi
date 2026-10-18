@@ -1,5 +1,5 @@
 import type { BackendHost } from "../shared/host-ext";
-import type { ArgKind, BackendMethod, BackendMethods, RouteRequest, RpcRequest, RpcResponse } from "../shared/protocol";
+import type { ArgKind, BackendMethod, BackendMethods, EntityOption, RouteRequest, RpcRequest, RpcResponse } from "../shared/protocol";
 import { formatDictation, rewriteDraft } from "./dictation/index";
 import type { EntityLists } from "./entities";
 import { pickDomControl, routeUtterance } from "./router/index";
@@ -21,7 +21,7 @@ export function createHandlers(host: BackendHost, entities: EntityLists, service
       for (const kind of BACKEND_KINDS) {
         if (!needed.has(kind)) continue;
         const items = await entities.get(kind, userId);
-        if (items) filled[kind] = items;
+        if (items) filled[kind] = kind === "character" ? recentFirst(items, req.context.recentCharacterIds) : items;
       }
       return routeUtterance({ ...req, entities: filled }, services(req.settings, userId));
     },
@@ -38,7 +38,7 @@ export function createHandlers(host: BackendHost, entities: EntityLists, service
     async listProfiles(_params, userId) {
       const user = userId ? { userId } : undefined;
       const decision = host.permissions.has("decisions")
-        ? (await host.decisions.listConnections(user)).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_default }))
+        ? (await host.decisions.listConnections(user)).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_default, model: c.model }))
         : [];
       const embedding = host.embeddings
         ? (await host.embeddings.listConnections(user)).filter((c) => c.enabled).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_primary }))
@@ -72,6 +72,12 @@ export function createHandlers(host: BackendHost, entities: EntityLists, service
       return { ok: true };
     },
   };
+}
+
+/** Characters of recent chats first (newest first), then the rest in host order. Ties in matching keep this order. */
+export function recentFirst(items: EntityOption[], recentIds: string[]): EntityOption[] {
+  const rank = new Map(recentIds.map((id, i) => [id, i]));
+  return [...items].sort((a, b) => (rank.get(a.id) ?? Infinity) - (rank.get(b.id) ?? Infinity));
 }
 
 export function isRpcRequest(payload: unknown): payload is RpcRequest {

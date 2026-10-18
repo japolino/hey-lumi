@@ -1,5 +1,6 @@
 import type { FrontendCtx, HostSurfaceInfo } from "../shared/host-ext";
-import type { ActionCandidate, ArgKind, EntityOption, PendingAsk, PlanStep, RouteContext, RouteResult } from "../shared/protocol";
+import type { ActionCandidate, PendingAsk, PlanStep, RouteContext, RouteResult } from "../shared/protocol";
+import type { FrontendEntities } from "./candidates";
 import { routerSettings, type LumiVoiceSettings } from "../shared/settings";
 import { runStep, type SessionActions, type StepOutcome } from "./actions";
 import type { AudioSource, Transcriber, WakeDetector } from "./audio/types";
@@ -39,7 +40,9 @@ export interface SessionDeps {
   settings(): LumiVoiceSettings;
   surfaces(): HostSurfaceInfo[];
   candidates(): ActionCandidate[];
-  entities(): Promise<Partial<Record<ArgKind, EntityOption[]>>>;
+  entities(): Promise<FrontendEntities>;
+  /** Turn the mic off (the "stop listening" action). */
+  stopListening(): void;
   generating(): boolean;
   /** Speak a short text with host TTS; resolves when done. Undefined without ctx.tts. */
   speak?: (text: string) => Promise<void>;
@@ -173,6 +176,7 @@ export function createSession(deps: SessionDeps) {
 
     set({ phase: "thinking", options: [] });
     const settings = deps.settings();
+    const entities = await deps.entities();
     const result = await deps.rpc("route", {
       utterance: text,
       context: {
@@ -181,9 +185,11 @@ export function createSession(deps: SessionDeps) {
         generating: deps.generating(),
         draft: deps.draft.available() ? deps.draft.get() : "",
         history,
+        lumiSaid: said,
+        recentCharacterIds: entities.recentCharacterIds,
       },
       candidates: deps.candidates(),
-      entities: await deps.entities(),
+      entities: entities.lists,
       ...(pending ? { pending } : {}),
       settings: routerSettings(settings),
     });
@@ -315,6 +321,14 @@ export function createSession(deps: SessionDeps) {
   }
 
   const sessionActions: SessionActions = {
+    async close() {
+      close();
+      return { ok: true };
+    },
+    async stopListening() {
+      deps.stopListening();
+      return { ok: true };
+    },
     async draftSend() {
       if (!deps.draft.available()) return { ok: false, say: "There is no chat input on screen." };
       if (!deps.draft.get().trim()) return { ok: false, say: "The message is empty." };

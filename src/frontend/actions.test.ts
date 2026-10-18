@@ -87,3 +87,16 @@ test("LLM profile switch prefers setActiveAcknowledged; a missing arg fails clea
   expect(calls).toEqual(["p2"]);
   await expect(runStep(step("lumi:llm_switch"), e)).rejects.toThrow("MISSING_ARG");
 });
+
+test("stop while nothing streams closes Lumi; while streaming it stops the generation", async () => {
+  const closed: string[] = [];
+  const idle = env([{ kind: "command", id: "action-stop-generation", label: "Stop Generation" }]);
+  idle.e.session = { close: async () => (closed.push("close"), { ok: true }) } as unknown as ActionEnv["session"];
+  await runStep(step("lumi:stop"), idle.e);
+  expect(closed).toEqual(["close"]);
+  expect(idle.invoked).toEqual([]);
+
+  const busy = env([{ kind: "command", id: "action-stop-generation", label: "Stop Generation" }], { generating: true });
+  await runStep(step("lumi:stop"), busy.e);
+  expect(busy.invoked).toEqual([["command", "action-stop-generation", undefined]]);
+});

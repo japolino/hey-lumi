@@ -55,3 +55,15 @@ test("settings tabs from the backend fill in when the catalog has none", () => {
   expect(buildCandidates(noSettings, fallback).some((c) => c.id === "surface:settings_tab:voice")).toBe(true);
   expect(buildCandidates(surfaces, fallback).filter((c) => c.id === "surface:settings_tab:voice").length).toBe(1);
 });
+
+test("Lumi Voice's own surfaces are left out", () => {
+  const own: HostSurfaceInfo[] = [
+    { kind: "drawer_tab", id: "lumi_voice", label: "Lumi Voice", owner: "ext-1" },
+    { kind: "input_bar_action", id: "lumi_voice_toggle", label: "Lumi Voice", owner: "ext-1" },
+    { kind: "drawer_tab", id: "other", label: "Other Extension", owner: "ext-2" },
+  ];
+  const ids = buildCandidates([...surfaces, ...own], [], "ext-1").map((c) => c.id);
+  expect(ids.filter((id) => id.includes("lumi_voice"))).toEqual([]);
+  expect(ids).toContain("surface:drawer_tab:other");
+  expect(ids).toContain("lumi:stop_listening");
+});

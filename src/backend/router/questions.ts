@@ -39,6 +39,8 @@ const LUMI_KEYWORDS: Record<string, string> = {
   "lumi:swipe_left": "swipe left, swipe back, previous reply, last swipe, go back one swipe",
   "lumi:swipe_right": "swipe right, next reply, another reply, new swipe",
   "lumi:stop": "stop, halt, cancel, enough, wait stop",
+  "lumi:close": "close, close Lumi, go away, dismiss, that's all, goodbye",
+  "lumi:stop_listening": "stop listening, mute, turn off the mic, stop the microphone, go to sleep",
   "lumi:draft_send": "send it, send, submit, post it, go ahead",
   "lumi:draft_rewrite": "rewrite, rephrase, improve, polish, make it better",
   "lumi:draft_clear": "clear, erase, delete the draft, scrap it, start over",
@@ -126,6 +128,7 @@ export async function buildDecision(
       chat_draft: context.draft ? context.draft.slice(0, 300) : "(empty)",
     },
     session_so_far: context.history.slice(-4).map((h) => `user: ${h.said} -> Lumi: ${h.did}`),
+    lumi_last_said: context.lumiSaid || "(nothing yet)",
   };
   const questions: Record<string, DecisionQuestion> = {
     intent: {
@@ -133,7 +136,8 @@ export async function buildDecision(
       instructions:
         "The user is talking to Lumi, a voice assistant inside the Lumiverse roleplay chat app. `utterance` is what speech recognition heard (it may have errors). What is it? Use `app` and `session_so_far` for context.",
       criteria: {
-        close: "The user is done with Lumi and ends the conversation: \"that's about it\", \"I don't need anything else\", \"thanks Lumi, bye\", \"that's all\", \"never mind, close\".",
+        close:
+          "The user is done with Lumi and ends the conversation: \"that's about it\", \"I don't need anything else\", \"thanks Lumi, bye\", \"thanks, that's all\", \"okay, thank you\", \"great, thanks\", \"bye Lumi\", \"never mind, close\". A thank-you right after Lumi finished a task (see `lumi_last_said`) is a close, even when speech recognition garbled the end (\"thanks, Lumi, but...\").",
         command:
           "The user asks Lumi to do something in the app: open or go to something, switch or apply something, start a chat, regenerate, swipe, continue, stop, send, rewrite, clear or read the draft, change a setting.",
         dictation:
